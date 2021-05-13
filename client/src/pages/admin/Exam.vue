@@ -46,7 +46,7 @@
       </div>
     </div>
     <div v-else>
-      <questions :id="test.id"></questions>
+      <questions :id="test.id" :_id="test._id" @closeC="close"></questions>
     </div>
   </div>
 </template>
@@ -130,6 +130,12 @@ export default {
     reload () {
       this.questId = ''
       this.indexQ = this.questions.length + 1
+    },
+    close (f) {
+      if (f === false) {
+        this.componentQ = false
+        this.getTestById()
+      }
     }
   }
 }

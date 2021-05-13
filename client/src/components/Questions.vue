@@ -11,28 +11,30 @@
           <q-list bordered class="rounded-borders q-ma-md q-pa-md">
             <div class="text-h6 text-primary">Asignaciones:</div>
             <q-expansion-item
-              v-for="(item, index) in data"
+              v-for="(item, index) in courses"
               :key="index"
               expand-separator
               icon="menu_book"
               :label="item.name"
+              @input="getTests(item._id)"
             >
               <q-card>
                 <q-card-section>
                   <q-list bordered class="rounded-borders q-ma-md q-pa-md">
                     <div class="text-h6 text-primary">Temas:</div>
                     <q-expansion-item
-                      v-for="(item2, index) in item.tests"
+                      v-for="(item2, index) in tests"
                       :key="index"
                       expand-separator
                       icon="source"
                       :label="item2.title"
+                      @input="getQuestions(item2.id)"
                     >
                       <q-card>
                         <q-card-section>
                           <q-list bordered class="rounded-borders q-ma-md q-pa-md">
                             <div class="text-h6 text-primary">Preguntas:</div>
-                            <div class="text-subtitle1 q-ml-sm" v-for="(item3, index) in item2.questions" :key="index">{{index + 1}} - {{item3.question}}
+                            <div class="text-subtitle1 q-ml-sm" v-for="(item3, index) in questions" :key="index">{{index + 1}} - {{item3.question}}
                               <q-checkbox v-model="item3.isActive" @input="questSelected(item3)"/>
                               <div v-for="(item4, index) in item3.answers" :key="index">
                                 <q-item class="text-subtitle1">{{item4.titleAnswer}}</q-item>
@@ -58,26 +60,53 @@
 <script>
 export default {
   name: 'Questions',
-  props: ['id'],
+  props: ['id', '_id'],
   data () {
     return {
-      data: null,
+      courses: null,
+      tests: null,
+      questions: null,
       send: []
     }
   },
   mounted () {
-    this.getQuestions()
+    this.getCourses()
+    console.log('this.id >> ', this.id, this._id)
   },
   methods: {
-    async getQuestions () {
+    async getCourses () {
       this.$q.loading.show({
         message: 'Cargando Datos...'
       })
-      await this.$api.get('getFullQuestions/').then(res => {
+      await this.$api.get('course').then(res => {
         if (res) {
           this.$q.loading.hide()
-          this.data = res
-          console.log('this.data >> ', this.data)
+          this.courses = res
+          console.log('this.courses >> ', this.courses)
+        }
+      })
+    },
+    async getTests (id) {
+      this.$q.loading.show({
+        message: 'Cargando Datos...'
+      })
+      await this.$api.get('testbByCourse/' + id).then(res => {
+        if (res) {
+          this.$q.loading.hide()
+          this.tests = res
+          console.log('this.tests >> ', this.tests)
+        }
+      })
+    },
+    async getQuestions (id) {
+      this.$q.loading.show({
+        message: 'Cargando Datos...'
+      })
+      await this.$api.get('getQuestionsbyTest/' + id).then(res => {
+        if (res) {
+          this.$q.loading.hide()
+          this.questions = res
+          console.log('this.questions >> ', this.questions)
         }
       })
     },
@@ -96,13 +125,16 @@ export default {
           this.send.splice(i, 1)
         }
       }
+      console.log('this.send >> ', this.send)
+      this.$q.loading.hide()
       this.$api.put('multiplesQuestions', {
         multiple: this.send,
-        id: this.id
+        id: this.id,
+        _id: this._id
       }).then(res => {
         if (res) {
           this.$q.loading.hide()
-          this.$router.go(-1)
+          this.$emit('closeC', false)
         }
       })
     }

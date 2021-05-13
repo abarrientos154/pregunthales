@@ -1,5 +1,6 @@
 'use strict'
 const Test = use("App/Models/Test")
+const Question = use("App/Models/Question")
 var ObjectId = require('mongodb').ObjectId;
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -47,7 +48,7 @@ class TestController {
       var data = request.body
       data.family_id = new ObjectId(data.family_id)
       let id = (await Test.query().where({}).fetch()).toJSON()
-      let lastT = id.length -1
+      let lastT = id.length - 1
       id = parseInt(id[lastT].id) + 1
       data.id = id
       let save = await Test.create(data)
@@ -120,12 +121,28 @@ class TestController {
       let test = (await Test.with('course').with('questions').find(params.id)).toJSON()
       response.send(test)
     } catch (error) {
-      console.error(error.name +'1: ' + error.message)
+      console.error(error.name + '1: ' + error.message)
+    }
+  }
+  async testByCourseId ({ request, response, params }) {
+    try {
+      console.log('params.id :>> ', typeof (params.id));
+      const id = new ObjectId(params.id)
+      const test = (await Test.query().where({ family_id: id }).fetch()).toJSON()
+      console.log('test :>> ', test);
+      response.send(test)
+    } catch (error) {
+      console.error(error.name + '1: ' + error.message)
     }
   }
   async testExamById ({ request, response, params }) {
     try {
       let test = (await Test.with('exam').with('questions').find(params.id)).toJSON()
+      if (test.hasExamId) {
+        const questionsFromExam = (await Question.query().where({ exam_id: test.id }).fetch()).toJSON()
+        const questions = [...test.questions]
+        test.questions = [...questions, ...questionsFromExam]
+      }
       response.send(test)
     } catch (error) {
       console.error(error.name + '1: ' + error.message)
