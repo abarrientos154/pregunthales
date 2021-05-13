@@ -116,7 +116,7 @@ export default {
       this.$q.loading.show({
         message: 'Cargando Datos...'
       })
-      await this.$api.get('asignatura').then(res => {
+      await this.$api.get('course').then(res => {
         if (res) {
           this.$q.loading.hide()
           this.asig = res
