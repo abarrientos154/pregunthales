@@ -16,6 +16,31 @@ const Title = use("App/Models/Title")
 const titleData = [
   {
     _id: new ObjectId('608964970eb52e7c74d66d17'),
+    name: 'Principiante',
+    nomenclature: 'P'
+  },
+  {
+    _id: new ObjectId('608964990eb52e7c74d66d19'),
+    name: 'Iniciado',
+    nomenclature: 'I'
+  },
+  {
+    _id: new ObjectId('608964990eb52e7c74d66d1b'),
+    name: 'Avanzado',
+    nomenclature: 'PER'
+  },
+  {
+    _id: new ObjectId('608964990eb52e7c74d66d1d'),
+    name: 'Experto',
+    nomenclature: 'E'
+  },
+  {
+    _id: new ObjectId('608964990eb52e7c74d66d1f'),
+    name: 'Maestro',
+    nomenclature: 'PY'
+  }
+  /* {
+    _id: new ObjectId('608964970eb52e7c74d66d17'),
     name: 'Licencia de navegación',
     nomenclature: 'LN'
   },
@@ -43,11 +68,11 @@ const titleData = [
     _id: new ObjectId('608964990eb52e7c74d66d21'),
     name: 'Capitán de Yate',
     nomenclature: 'CY'
-  }
+  } */
 ]
 
 class TitleSeeder {
-  /* async run () {
+  async run () {
     for (let i in titleData) {
       let title = await Title.findBy('_id', titleData[i]._id)
       if (!title) {
@@ -55,7 +80,7 @@ class TitleSeeder {
       }
     }
     console.log('Finished Title')
-  } */
+  }
 }
 
 module.exports = TitleSeeder
