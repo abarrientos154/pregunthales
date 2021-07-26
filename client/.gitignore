@@ -14,6 +14,7 @@ node_modules
 
 # Capacitor related directories and files
 /src-capacitor/www
+/src-env.js
 /src-capacitor/node_modules
 
 # BEX related directories and files
