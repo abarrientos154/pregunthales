@@ -1,22 +1,31 @@
 <template>
-  <div class="column items-center justify-center">
-    <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px" class="q-mt-lg">
+  <div>
+    <div class="q-pt-lg q-pb-sm row justify-center">
+      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    </div>
     <div class="absolute-top">
       <q-btn round flat icon="arrow_back" @click="$router.go(-1)" />
     </div>
 
-    <div class="shadow-3 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+    <div class="shadow-up-1 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
       <div class="text-primary text-h6 q-py-md">Registro de usuario</div>
+      <div class="row justify-center">
+        <q-avatar size="150px" class="bg-grey-5">
+          <q-img :src="perfile ? imgPerfil : ''" style="width: 100%; height: 100%">
+            <q-file class="absolute-center" borderless v-model="perfile" @input="changeProfile()" accept=".jpg, image/*" style="width: 100%; height: 100%; font-size: 0px">
+              <div class="absolute-center column items-center q-mt-xl full-width">
+                <q-icon name="cloud_upload" size="50px" color="grey-9" />
+              <div :class="$v.perfile.$error ? 'text-negative' : 'text-grey-9'" style="font-size: 15px">Selecciona avatar</div>
+              </div>
+            </q-file>
+          </q-img>
+        </q-avatar>
+      </div>
 
       <div class="row" style="width: 70%; min-width: 300px">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Nombre</div>
-          <q-input dense outlined type="text" v-model="form.name" placeholder="Nombre" error-message="Ingrese un nombre válido" :error="$v.form.name.$error" @blur="$v.form.name.$touch()">
-          </q-input>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Apellido</div>
-          <q-input dense outlined type="text" v-model="form.last_name" placeholder="Apellido" error-message="Ingrese un apellido válido" :error="$v.form.last_name.$error" @blur="$v.form.last_name.$touch()">
+          <div class="text-grey-8">Nombre de usuario</div>
+          <q-input dense outlined type="text" v-model="form.name" placeholder="Ingresa un nombre" error-message="Este campo es requerido" :error="$v.form.name.$error" @blur="$v.form.name.$touch()">
           </q-input>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
@@ -37,40 +46,7 @@
           <q-input dense outlined :type="isPwd ? 'text' : 'password'" v-model="repeatPassword" placeholder="Repita contraseña" error-message="Las contraseñas deben ser iguales" :error="$v.repeatPassword.$error" @blur="$v.repeatPassword.$touch()">
           </q-input>
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">NIF/NIE</div>
-          <q-input dense outlined type="text" v-model="form.nif_nie" placeholder="NIF/NIE" error-message="Ingrese un NIF o NIE válido" :error="$v.form.nif_nie.$error" @blur="$v.form.nif_nie.$touch()">
-          </q-input>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Ingrese un número de contacto</div>
-          <q-input dense outlined type="text" v-model="form.phone" placeholder="Numero de telefono" error-message="Ingrese un Nº telefónico válido" :error="$v.form.phone.$error" @blur="$v.form.phone.$touch()">
-          </q-input>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">C.P</div>
-          <q-input dense outlined type="text" v-model="form.cp" placeholder="C.P" error-message="Ingrese un C.P válido" :error="$v.form.cp.$error" @blur="$v.form.cp.$touch()">
-          </q-input>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Selecciona un país</div>
-          <q-select outlined dense label="País" v-model="form.pais" :options="['España']" error-message="Seleccione un país" :error="$v.form.pais.$error" @blur="$v.form.pais.$touch()">
-          </q-select>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Ingresa una provincia</div>
-          <q-input dense outlined type="text" v-model="form.provincia" label="Provincia" error-message="Ingrese una provincia válida" :error="$v.form.provincia.$error" @blur="$v.form.provincia.$touch()">
-          </q-input>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 q-px-sm">
-          <div class="text-grey-8">Ingresa una población</div>
-          <q-input dense outlined type="text" v-model="form.poblacion" label="Población" error-message="Ingrese una población válida" :error="$v.form.poblacion.$error" @blur="$v.form.poblacion.$touch()">
-          </q-input>
-        </div>
       </div>
-
-      <q-checkbox v-model="terminos" size="xs" label="Acepta Terminos y condiciones de uso?" />
-      <div class="text-negative text-h7" v-if="!terminos && aparecer"> Debe Aceptar los terminos </div>
 
       <div class="column items-center justify-center q-my-md" style="width: 70%">
         <q-btn color="black" text-color="white" label="Registrar" :loading="loading" @click="registrarse()" no-caps class="q-py-xs" style="width:100%">
@@ -92,27 +68,19 @@ export default {
     return {
       isPwd: false,
       loading: false,
-      terminos: false,
-      aparecer: false,
+      perfile: null,
       repeatPassword: '',
       password: '',
-      rol: 2,
+      imgPerfil: '',
       form: {}
     }
   },
   validations: {
     form: {
       name: { required, maxLength: maxLength(20), minLength: minLength(2) },
-      last_name: { required, maxLength: maxLength(20), minLength: minLength(2) },
-      email: { required, email },
-      roles: { required },
-      nif_nie: { required },
-      phone: { required },
-      cp: { required },
-      pais: { required },
-      provincia: { required },
-      poblacion: { required }
+      email: { required, email }
     },
+    perfile: { required },
     repeatPassword: { sameAsPassword: sameAs('password') },
     password: { required, maxLength: maxLength(256), minLength: minLength(6) }
   },
@@ -120,10 +88,17 @@ export default {
     ...mapMutations('generals', ['login']),
     async registrarse () {
       this.$v.$touch()
-      this.form.roles = this.rol
-      if (!this.$v.form.$error && !this.$v.password.$error && !this.$v.repeatPassword.$error && this.terminos) {
+      if (!this.$v.form.$error && !this.$v.perfile.$error && !this.$v.password.$error && !this.$v.repeatPassword.$error) {
+        this.form.roles = 2
         this.form.password = this.password
-        await this.$api.post('register', this.form).then(res => {
+        const formData = new FormData()
+        formData.append('files', this.perfile)
+        formData.append('dat', JSON.stringify(this.form))
+        await this.$api.post('register', formData, {
+          headers: {
+            'Content-Type': undefined
+          }
+        }).then(res => {
           if (res) {
             this.$q.notify({
               message: 'Ya formas parte de Pregunthales, Bienvenido',
@@ -137,7 +112,6 @@ export default {
           message: 'Debe ingresar todos los datos correspondientes',
           color: 'negative'
         })
-        this.aparecer = true
       }
     },
     loguear () {
@@ -154,6 +128,9 @@ export default {
         }
         this.$q.loading.hide()
       })
+    },
+    changeProfile () {
+      if (this.perfile) { this.imgPerfil = URL.createObjectURL(this.perfile) }
     }
   }
 }

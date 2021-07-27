@@ -1,7 +1,7 @@
 "use strict";
 
-// const Helpers = use('Helpers')
-// const mkdirp = use('mkdirp')
+const Helpers = use('Helpers')
+const mkdirp = use('mkdirp')
 // const fs = require('fs')
 const User = use("App/Models/User")
 const Role = use("App/Models/Role")
@@ -61,13 +61,8 @@ class UserController {
   }
 
   async register({ request, response }) {
-    var dat = request.body
-
-    // const validation = await validate(dat, User.fieldValidationRules())
-    // if (validation.fails()) {
-    //   response.unprocessableEntity(validation.messages())
-    // } else {
-    // }
+    var dat = request.only(['dat'])
+    dat = JSON.parse(dat.dat)
 
     if (((await User.where({email: dat.email}).fetch()).toJSON()).length) {
       response.unprocessableEntity([{
@@ -78,6 +73,19 @@ class UserController {
       const rol = body.roles
       body.roles = [rol]
       const user = await User.create(body)
+
+      const profilePic = request.file('files', {
+        types: ['image']
+      })
+      if (Helpers.appRoot('storage/uploads/perfil')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/perfil'), {
+          name: user._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+
       response.send(user)
     }
   }

@@ -13,7 +13,7 @@ const routes = [
       { path: '/exam/:id', component: () => import('pages/admin/Exam.vue') },
       { path: '/date_exams', component: () => import('pages/admin/DateExams.vue') },
       // User
-      { path: '/home', component: () => import('pages/user/Inicio.vue') },
+      { path: '/inicio', component: () => import('pages/user/Inicio.vue') },
       { path: '/courses', component: () => import('pages/user/Courses.vue') },
       { path: '/tests-courses/:id', component: () => import('pages/user/TestsCourses.vue') },
       { path: '/test-course/:id', component: () => import('pages/user/TestCourse.vue') },
