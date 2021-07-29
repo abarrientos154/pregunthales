@@ -108,9 +108,6 @@ class QuestionController {
   async multiplesQuestions ({ request, response }) {
     try {
       let { multiple, id, _id } = request.all()
-      console.log(typeof (_id));
-      console.log('id :>> ', _id);
-      console.log('multiple :>> ', multiple);
       let test = await Niveles.find(_id)
       test.hasExamId = true
       test.merge()

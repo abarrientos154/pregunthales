@@ -217,7 +217,6 @@ export default {
       if (itm) {
         const datos = { ...itm }
         this.form = datos
-        console.log(this.form)
         this.imgNivel = this.baseuNivel + this.form._id
         this.nuevo = true
         this.edit = true

@@ -80,9 +80,7 @@ export default {
         if (res) {
           this.$q.loading.hide()
           this.test = res
-          console.log('this.test >> ', this.test)
           this.questions = this.test.questions
-          console.log('')
           this.indexQ = this.questions.length + 1
         } else {
           this.$q.loading.hide()

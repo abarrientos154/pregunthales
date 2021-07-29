@@ -103,7 +103,6 @@ class UploadController {
     var filePath = await MoveFileService.moveFile(files)
     var workbook = new ExcelJS.Workbook()
     workbook = await workbook.xlsx.readFile(filePath)
-    console.log('workbook :>> ', workbook);
     let explanation = workbook.getWorksheet('Hoja1')
     let colComment = explanation.getColumn('B')
     colComment.eachCell(async (cell, rowNumber) => {
@@ -133,15 +132,12 @@ class UploadController {
     response.send(true)
   }
   async bigData ({ request, response }) {
-    //console.log('entra en bigdata');
     try {
       if (request.file('testFile')) {
-        //console.log('sirve test');
         let testFile = request.file('testFile')
         var filePath = await MoveFileService.moveFile(testFile)
         var workbook = new ExcelJS.Workbook()
         workbook = await workbook.xlsx.readFile(filePath)
-        //console.log('workbook :>> ', workbook);
         var explanation = workbook.getWorksheet('Hoja1')
         var colComment = explanation.getColumn('A')
         colComment.eachCell(async (cell, rowNumber) => {
@@ -167,12 +163,10 @@ class UploadController {
     try {   
       if (request.file('questionsFile') && request.file('answersFile')) {
         // preguntas
-        console.log('object :>> ');
         let questionsFile = request.file('questionsFile')
         filePath = await MoveFileService.moveFile(questionsFile)
         var workbook1 = new ExcelJS.Workbook()
         workbook1 = await workbook1.xlsx.readFile(filePath)
-        console.log('workbook :>> ', workbook1);
         var explanation1 = workbook1.getWorksheet('Hoja1')
         var colComment = explanation1.getColumn('A')
         let collectionQuestions = []
