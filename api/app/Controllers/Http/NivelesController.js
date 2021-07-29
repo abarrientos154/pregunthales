@@ -1,6 +1,8 @@
 'use strict'
-const Test = use("App/Models/Test")
+const Nivele = use("App/Models/Nivele")
 const Question = use("App/Models/Question")
+const Helpers = use('Helpers')
+const mkdirp = use('mkdirp')
 var ObjectId = require('mongodb').ObjectId;
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -10,7 +12,7 @@ var ObjectId = require('mongodb').ObjectId;
 /**
  * Resourceful controller for interacting with tests
  */
-class TestController {
+class NivelesController {
   /**
    * Show a list of all tests.
    * GET tests
@@ -45,9 +47,10 @@ class TestController {
    */
   async store ({ request, response }) {
     try {
-      var data = request.body
+      var data = request.only(['dat'])
+      data = JSON.parse(data.dat)
       data.family_id = new ObjectId(data.family_id)
-      var id = (await Test.query().where({}).fetch()).toJSON()
+      var id = (await Nivele.query().where({}).fetch()).toJSON()
       if (id.length < 1) {
         data.id = 1
       } else {
@@ -55,7 +58,20 @@ class TestController {
         id = parseInt(id[lastT].id) + 1
         data.id = id
       }
-      let save = await Test.create(data)
+      let save = await Nivele.create(data)
+
+      const profilePic = request.file('files', {
+        types: ['image']
+      })
+      if (Helpers.appRoot('storage/uploads/niveles')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
+          name: save._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+
       response.send(save)
     } catch (error) {
       console.error('metodo store:' + error.name + ':' + error.message);
@@ -95,9 +111,24 @@ class TestController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    var data = request.body
+    var data = request.only(['dat'])
+    data = JSON.parse(data.dat)
     data.family_id = new ObjectId(data.family_id)
-    let update = await Test.query().where('_id', params.id).update(data)
+    if (data.file) {
+      const profilePic = request.file('files', {
+        types: ['image']
+      })
+      if (Helpers.appRoot('storage/uploads/niveles')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
+          name: data._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
+    }
+    delete data.file
+    let update = await Nivele.query().where('_id', params.id).update(data)
     response.send(update)
   }
 
@@ -110,19 +141,18 @@ class TestController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
-    let test = await Test.find(params.id)
+    let test = await Nivele.find(params.id)
     await test.delete()
     response.send(test)
   }
 
   async testByCourse ({ request, response, params }) {
-    let data = (await Test.query().where({ family_id: params.id }).fetch()).toJSON()
-    console.log(data, 'data')
+    let data = (await Nivele.query().where({ family_id: params.id }).fetch()).toJSON()
     response.send(data)
   }
   async testById ({ request, response, params }) {
     try {
-      let test = (await Test.with('course').with('questions').find(params.id)).toJSON()
+      let test = (await Nivele.with('course').with('questions').find(params.id)).toJSON()
       response.send(test)
     } catch (error) {
       console.error(error.name + '1: ' + error.message)
@@ -130,10 +160,8 @@ class TestController {
   }
   async testByCourseId ({ request, response, params }) {
     try {
-      console.log('params.id :>> ', typeof (params.id));
       const id = new ObjectId(params.id)
-      const test = (await Test.query().where({ family_id: id }).fetch()).toJSON()
-      console.log('test :>> ', test);
+      const test = (await Nivele.query().where({ family_id: id }).fetch()).toJSON()
       response.send(test)
     } catch (error) {
       console.error(error.name + '1: ' + error.message)
@@ -141,7 +169,7 @@ class TestController {
   }
   async testExamById ({ request, response, params }) {
     try {
-      let test = (await Test.with('exam').with('questions').find(params.id)).toJSON()
+      let test = (await Nivele.with('exam').with('questions').find(params.id)).toJSON()
       if (test.hasExamId) {
         const questionsFromExam = (await Question.query().where({ exam_id: test.id }).fetch()).toJSON()
         const questions = [...test.questions]
@@ -154,4 +182,4 @@ class TestController {
   }
 }
 
-module.exports = TestController
+module.exports = NivelesController

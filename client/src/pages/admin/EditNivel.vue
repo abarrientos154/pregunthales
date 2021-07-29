@@ -1,39 +1,41 @@
 <template>
   <div>
     <div class="text-h3 col-10 row justify-center q-my-sm text-primary text-weight-bolder">{{test.title}}</div>
-    <div class="text-h6 col-10 row justify-center q-my-sm text-primary text-weight-bolder">{{test.course.name}}</div>
+    <div class="text-h6 col-10 row justify-center q-my-sm text-primary text-weight-bolder">{{test.course ? test.course.name : ''}}</div>
     <q-card class="row justify-start bg-blue-2">
       <div class="column q-ma-md">
         <div class="text-h6 text-primary">Nueva Pregunta</div>
         <div class="row">
           <q-btn @click="newQ = true" class="text-subtitle1" padding="10px 5px" color="primary" icon="add" no-caps>Nueva</q-btn>
-          <q-btn @click="newF = true" padding="10px 8px" class="text-subtitle1 q-ml-sm" color="primary" icon="upload_file" no-caps>Desde Excel</q-btn>
         </div>
       </div>
     </q-card>
-    <div>
-      <q-dialog v-model="newQ" @hide="reload">
-        <quest @question="newQuest" :id="questId" :index="indexQ" :test_id="test.id"/>
-      </q-dialog>
-    </div>
-    <div>
-      <q-dialog v-model="newF">
-        <quest-upload @file="getFile" :test_id="test.id"/>
-      </q-dialog>
-    </div>
+
     <div class="row justify-center">
       <div class="col col-xs-12 col-sm-11 col-md-10 col-lg-8 col-xl-6 q-mx-md q-my-sm">
         <div class="column dimension no-wrap" v-if="questions.length > 0">
           <q-card class=" dimensionC q-px-xl q-pt-md q-pb-lg q-ma-lg" v-for="(qt, index) in questions" :key="index">
-            <q-card class="row bg-blue-2 q-pa-sm q-mb-md">
-              <div class="col-9 text-h6 text-primary q-ml-xs q-mb-sm">{{index + 1}} - {{qt.question}}</div>
-              <div>
-                <q-btn class="col-6" round flat size="md" text-color="primary" icon="edit" @click="getIdForEdit(qt._id, index)"  />
-                <q-btn class="col-6" round flat size="md" text-color="primary" icon="delete" @click="destroyQuest(qt._id)" />
+            <div class="row items-start">
+              <div class="col-3 row justify-center q-mr-sm">
+                <img :src="baseuPregunta + qt._id" style="width: 150px; height: 150px; border-radius: 10px"/>
               </div>
-            </q-card>
-            <div class="column q-pl-lg" v-for="(item, index) in qt.answers" :key="index">
-              <q-item class="text-subtitle1 q-mb-sm" clickable> {{item.titleAnswer}}</q-item>
+              <div class="col">
+                <q-card class="row bg-blue-2 q-pa-sm q-mb-md">
+                  <div class="col-9 text-h6 text-primary q-ml-xs q-mb-sm">{{index + 1}} - {{qt.question}}</div>
+                  <div>
+                    <q-btn class="col-6" round flat size="md" text-color="primary" icon="edit" @click="getIdForEdit(qt._id, index)"  />
+                    <q-btn class="col-6" round flat size="md" text-color="primary" icon="delete" @click="destroyQuest(qt._id)" />
+                  </div>
+                </q-card>
+                  <div v-for="(item, index2) in qt.answers" :key="index2">
+                    <q-item clickable>
+                      <div class="row items-center">
+                        <div class="text-bold q-pr-sm">{{index2 == 0 ? 'A)' : index2 == 1 ? 'B)' : index2 == 2 ? 'C)' : 'D)'}}</div>
+                        <div class="text-subtitle1">{{item.titleAnswer}}</div>
+                      </div>
+                    </q-item>
+                  </div>
+              </div>
             </div>
           </q-card>
         </div>
@@ -42,25 +44,31 @@
         </q-card>
       </div>
     </div>
+
+    <div>
+      <q-dialog v-model="newQ" @hide="reload">
+        <quest @question="newQuest" :id="questId" :index="indexQ" :test_id="test.id"/>
+      </q-dialog>
+    </div>
   </div>
 </template>
 <script>
 import Quest from '../../components/Quest.vue'
-import QuestUpload from '../../components/QuestUpload.vue'
+import env from '../../env'
 export default {
-  components: { Quest, QuestUpload },
+  components: { Quest },
   data () {
     return {
       test: {},
-      questions: null,
+      questions: [],
       questId: '',
+      baseuPregunta: '',
       indexQ: null,
-      file: {},
-      newQ: false,
-      newF: false
+      newQ: false
     }
   },
   mounted () {
+    this.baseuPregunta = env.apiUrl + 'pregunta_img/'
     this.getTestById()
   },
   methods: {
@@ -74,6 +82,7 @@ export default {
           this.test = res
           console.log('this.test >> ', this.test)
           this.questions = this.test.questions
+          console.log('')
           this.indexQ = this.questions.length + 1
         } else {
           this.$q.loading.hide()
@@ -87,12 +96,6 @@ export default {
     newQuest (quest) {
       if (quest === false) {
         this.newQ = false
-        this.getTestById()
-      }
-    },
-    async getFile (f) {
-      if (f === false) {
-        this.newF = false
         this.getTestById()
       }
     },

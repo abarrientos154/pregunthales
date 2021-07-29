@@ -8,7 +8,7 @@ class Asignatura extends Model {
         return ['name','status']
     }
     tests () {
-        return this.hasMany('App/Models/Test', '_id', 'family_id')
+        return this.hasMany('App/Models/Nivele', '_id', 'family_id')
     }
 }
 

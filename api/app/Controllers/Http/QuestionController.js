@@ -1,7 +1,9 @@
 'use strict'
 const Question = use("App/Models/Question")
 const Asignatura = use("App/Models/Asignatura")
-const Test = use("App/Models/Test")
+const Niveles = use("App/Models/Nivele")
+const Helpers = use('Helpers')
+const mkdirp = use('mkdirp')
 var ObjectId = require('mongodb').ObjectId;
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -74,7 +76,10 @@ class QuestionController {
    */
   async store ({ request, response }) {
     try {
-      let { quest, answers } = request.body
+      var quest = request.only(['datQ'])
+      quest = JSON.parse(quest.datQ)
+      var answers = request.only(['datA'])
+      answers = JSON.parse(answers.datA)
       answers = Object.values(answers)
       let arr = []
       for (let i in answers) {
@@ -83,8 +88,18 @@ class QuestionController {
       }
       quest.answers = arr
       quest.isActive = false
-      console.log('quest :>> ', quest);
       let save = await Question.create(quest)
+      const profilePic = request.file('files', {
+        types: ['image']
+      })
+      if (Helpers.appRoot('storage/uploads/preguntas')) {
+        await profilePic.move(Helpers.appRoot('storage/uploads/preguntas'), {
+          name: save._id.toString(),
+          overwrite: true
+        })
+      } else {
+        mkdirp.sync(`${__dirname}/storage/Excel`)
+      }
       response.send(save)
     } catch (error) {
       console.error(error.name + 'store: ' + error.message);
@@ -96,16 +111,14 @@ class QuestionController {
       console.log(typeof (_id));
       console.log('id :>> ', _id);
       console.log('multiple :>> ', multiple);
-      let test = await Test.find(_id)
+      let test = await Niveles.find(_id)
       test.hasExamId = true
-      console.log('test :>> ', test);
       test.merge()
       await test.save()
       for (let i in multiple) {
         multiple[i].exam_id = id
         const update = await Question.where('_id', multiple[i]._id).update(multiple[i])
       }
-      console.log('multiple :>> ', multiple);
       response.send(true)
     } catch (error) {
       console.error(error.name + ' multiplesQuestions: ' + error.message);
@@ -148,12 +161,28 @@ class QuestionController {
    */
   async update ({ params, request, response }) {
     try {
-      let { quest, answers } = request.body
+      var quest = request.only(['datQ'])
+      quest = JSON.parse(quest.datQ)
+      var answers = request.only(['datA'])
+      answers = JSON.parse(answers.datA)
       answers = Object.values(answers)
       for (let i in answers) {
         quest.answers[i].titleAnswer = answers[i]
       }
-      console.log('quest :>> ', quest);
+      if (quest.file) {
+        const profilePic = request.file('files', {
+          types: ['image']
+        })
+        if (Helpers.appRoot('storage/uploads/preguntas')) {
+          await profilePic.move(Helpers.appRoot('storage/uploads/preguntas'), {
+            name: quest._id.toString(),
+            overwrite: true
+          })
+        } else {
+          mkdirp.sync(`${__dirname}/storage/Excel`)
+        }
+      }
+      delete quest.file
       const update = await Question.where('_id', params.id).update(quest)
       response.send(update)
     } catch (error) {

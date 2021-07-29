@@ -5,7 +5,7 @@ const Model = use('Model')
 
 class Question extends Model {
   static get fillable () {
-    return ['title', 'optionA', 'optionB', 'optionC', 'optionD']
+    return ['title', 'optionA', 'optionB', 'optionC', 'optionD', 'result']
   }
   static fieldValidationRules () {
     const rules = {

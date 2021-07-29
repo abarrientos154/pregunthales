@@ -35,6 +35,9 @@ addPrefixToGroup(
     Route.post("login", "UserController.login");
     Route.post("register", "UserController.register")
 
+    Route.get('nivel_img/:file', 'UploadController.getFileByDirectoryNiveles')
+    Route.get('pregunta_img/:file', 'UploadController.getFileByDirectoryPreguntas')
+
   })
 );
 
@@ -50,13 +53,13 @@ addPrefixToGroup(
     Route.put('updateAsignatura/:id', 'AsignaturaController.update')
 
     Route.get('tema', 'TemaController.index')
-    Route.get('test_by_course/:id', 'TestController.testByCourse')
-    Route.get('testbByCourse/:id', 'TestController.testByCourseId')
-    Route.get('testById/:id', 'TestController.testById')
-    Route.get('testExamById/:id', 'TestController.testExamById')
-    Route.post('test', 'TestController.store')
-    Route.put('test/:id', 'TestController.update')
-    Route.delete('test/:id', 'TestController.destroy')
+    Route.get('test_by_course/:id', 'NivelesController.testByCourse')
+    Route.get('testbByCourse/:id', 'NivelesController.testByCourseId')
+    Route.get('testById/:id', 'NivelesController.testById')
+    Route.get('testExamById/:id', 'NivelesController.testExamById')
+    Route.post('nivel', 'NivelesController.store')
+    Route.put('nivel/:id', 'NivelesController.update')
+    Route.delete('nivel/:id', 'NivelesController.destroy')
 
     Route.get('examen', 'ExamenController.index')
     Route.get('ExamById/:id', 'ExamenController.examById')

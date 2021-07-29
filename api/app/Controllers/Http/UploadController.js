@@ -1,8 +1,10 @@
 'use strict'
 const ExcelJS = require('exceljs');
 const Question = use("App/Models/Question")
-const Test = use("App/Models/Test")
+const Niveles = use("App/Models/Nivele")
 const MoveFileService = use("App/Services/MoveFileService")
+const Helpers = use('Helpers')
+const mkdirp = use('mkdirp')
 var ObjectId = require('mongodb').ObjectId;
 
 
@@ -154,7 +156,7 @@ class UploadController {
             test.family_id = objId
             let id = explanation.getCell('D' + rowNumber).value
             test.id = id
-            let save = await Test.create(test)
+            let save = await Niveles.create(test)
           }
         })
       }
@@ -234,6 +236,16 @@ class UploadController {
       console.error(error.name + '2: ' + error.message)
     }
     response.send(true)
+  }
+
+  async getFileByDirectoryNiveles ({ params, response }) {
+    const dir = params.file
+    response.download(Helpers.appRoot('storage/uploads/niveles') + `/${dir}`)
+  }
+
+  async getFileByDirectoryPreguntas ({ params, response }) {
+    const dir = params.file
+    response.download(Helpers.appRoot('storage/uploads/preguntas') + `/${dir}`)
   }
 }
 
