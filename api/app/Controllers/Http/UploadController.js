@@ -232,6 +232,11 @@ class UploadController {
     response.send(true)
   }
 
+  async getFileByDirectoryPerfil ({ params, response }) {
+    const dir = params.file
+    response.download(Helpers.appRoot('storage/uploads/perfil') + `/${dir}`)
+  }
+
   async getFileByDirectoryNiveles ({ params, response }) {
     const dir = params.file
     response.download(Helpers.appRoot('storage/uploads/niveles') + `/${dir}`)

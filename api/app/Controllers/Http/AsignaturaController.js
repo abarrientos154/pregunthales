@@ -16,7 +16,7 @@ const User = use("App/Models/User")
 
 class AsignaturaController {
   async index ({ request, response, view }) {
-    let datos = (await Asignatura.query().where({}).fetch()).toJSON()
+    let datos = (await Asignatura.query().where({}).with('tests').fetch()).toJSON()
     response.send(datos)
   }
 

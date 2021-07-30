@@ -35,6 +35,7 @@ addPrefixToGroup(
     Route.post("login", "UserController.login");
     Route.post("register", "UserController.register")
 
+    Route.get('perfil_img/:file', 'UploadController.getFileByDirectoryPerfil')
     Route.get('nivel_img/:file', 'UploadController.getFileByDirectoryNiveles')
     Route.get('pregunta_img/:file', 'UploadController.getFileByDirectoryPreguntas')
 
