@@ -17,43 +17,22 @@ const asignaturaData = [
   {
     _id: new ObjectId('60748c7ca06b4e9171dfeb02'),
     name: 'Español',
-    img: 'logo-pregunthales.jpg',
-    status: false
-  },
-  {
-    _id: new ObjectId('60748c7ca06b4e9171dfeb03'),
-    name: 'Física',
-    img: 'logo-pregunthales.jpg',
-    status: false
-  },
-  {
-    _id: new ObjectId('60748c7ca06b4e9171dfeb04'),
-    name: 'Geografía',
-    img: 'logo-pregunthales.jpg',
-    status: false
-  },
-  {
-    _id: new ObjectId('60748c7ba06b4e9171dfeafa'),
-    name: 'Informática',
-    img: 'logo-pregunthales.jpg',
-    status: false
-  },
-  {
-    _id: new ObjectId('60748c7ca06b4e9171dfeafb'),
-    name: 'Inglés',
-    img: 'logo-pregunthales.jpg',
+    description: 'Descripción de la materia',
+    img: 'noimg.png',
     status: false
   },
   {
     _id: new ObjectId('60748c7ca06b4e9171dfeafc'),
     name: 'Matemática',
-    img: 'logo-pregunthales.jpg',
+    description: 'Descripción de la materia',
+    img: 'noimg.png',
     status: false
   },
   {
     _id: new ObjectId('60748c7ca06b4e9171dfeafd'),
-    name: 'Química',
-    img: 'logo-pregunthales.jpg',
+    name: 'Todos los temas',
+    description: 'Descripción de la materia',
+    img: 'noimg.png',
     status: false
   }
 ]

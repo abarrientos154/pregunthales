@@ -24,8 +24,10 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response, view }) {
-    let users = await User.all();
+  async index({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let users = (await User.query().where({roles: [2]}).fetch()).toJSON()
+    users = users.filter(v => v._id !== user._id)
     response.send(users);
   }
 
@@ -72,6 +74,7 @@ class UserController {
       let body = dat
       const rol = body.roles
       body.roles = [rol]
+      body.points = 0
       const user = await User.create(body)
 
       const profilePic = request.file('files', {

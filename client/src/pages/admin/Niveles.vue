@@ -3,23 +3,19 @@
     <div class="text-primary text-h5">{{course.name}}</div>
     <div class="text-black text-subtitle1 text-weight-bolder q-mb-lg">Niveles</div>
     <q-list class="column items-center" style="width: 100%" v-if="tests.length > 0">
-      <q-card v-for="(item,index) in tests" :key="index" v-ripple class="q-pa-sm q-mb-md bordes" style="width: 75%; min-width: 300px; max-width: 500px">
-        <q-item>
-          <q-item-section @click="$router.push('/preguntas/' + item._id)">
-            <q-item>
-              <q-item-section>
-                <div class="row items-center q-gutter-md">
-                  <img :src="baseuNivel + item._id" style="width: 70px; height: 70px; border-radius: 10px"/>
-                <div class="text-black text-bold text-h6">{{item.title}}</div>
-                </div>
-              </q-item-section>
-            </q-item>
-          </q-item-section>
-          <q-item-section side>
-            <q-btn flat dense round class="q-mx-sm" color="primary" icon="edit" @click="editTem(item)"/>
-            <q-btn flat dense round class="q-mx-sm" color="red" icon="delete" @click="eiminarTem(item._id)"/>
-          </q-item-section>
-        </q-item>
+      <q-card v-for="(item,index) in tests" clickable :key="index" class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
+        <div class="row">
+          <div class="col-6 q-pa-sm">
+            <div class="text-h6" @click="$router.push('/preguntas/' + item._id)">{{item.title}}</div>
+            <div class="absolute-bottom row q-pa-md">
+              <q-btn flat dense round class="q-mx-sm" color="primary" icon="edit" @click="editTem(item)"/>
+              <q-btn flat dense round class="q-mx-sm" color="red" icon="delete" @click="eiminarTem(item._id)"/>
+            </div>
+          </div>
+          <div v-ripple class="col-6 q-pa-none" @click="$router.push('/preguntas/' + item._id)">
+            <q-img :src="baseuNivel + item._id" style="height: 150px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
+          </div>
+        </div>
       </q-card>
     </q-list>
     <q-card v-else class="shadow-2 q-ma-md q-pa-md">
@@ -86,8 +82,7 @@
           />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" v-close-popup no-caps style="width:100px"
-          @click="decartarCamb()" />
+          <q-btn label="Cancelar" color="primary" v-close-popup no-caps style="width:100px"/>
           <q-btn :label="edit ? 'Actualizar' :  'Guardar'" color="primary" no-caps style="width:100px"
           @click="edit ? actualizarTem() : crearTem()" />
         </q-card-actions>
@@ -211,6 +206,8 @@ export default {
       this.form = {
         type: false
       }
+      this.nivelFile = null
+      this.imgNivel = ''
       this.edit = false
     },
     editTem (itm) {
@@ -222,6 +219,7 @@ export default {
         this.edit = true
       } else {
         this.nuevo = true
+        this.$v.nivelFile.$reset()
         this.$v.form.$reset()
       }
     },
@@ -255,11 +253,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.bordes {
-  border-left: 6px solid $primary;
-  background-color: rgba(202, 202, 202, 0.474);
-  border-radius: 12px;
-}
-</style>

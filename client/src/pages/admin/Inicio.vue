@@ -2,23 +2,24 @@
   <div class="q-pa-md column items-center">
     <div class="text-primary text-h3 text-weight-bolder">Bienvenido!</div>
     <div class="text-black text-h6 q-mb-lg">Asignaturas</div>
-    <q-list class="column items-center" style="width: 100%">
-      <q-card v-for="(item,index) in asig" :key="index" v-ripple clickable class="q-pa-sm q-mb-md bordes" style="width: 75%;"
-      @click="$router.push('/niveles/' + item._id)" >
-        <q-item>
-          <q-item-section>
-            <q-item>
-              <q-item-section avatar>
-                <img :src="item.img" style="width:50px; height:50px; border-radius: 100%"/>
-              </q-item-section>
-              <q-item-section class="colum">
-                <q-item-label class="text-black text-weight-bolder text-h6">{{item.name}}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-item-section>
-        </q-item>
+
+    <div class="column items-center q-mt-md" style="width: 100%">
+      <q-card v-for="(item,index) in asig" :key="index" v-ripple clickable class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
+        <div class="row">
+          <div class="col-6 q-pa-sm">
+            <div class="text-h6">{{item.name}}</div>
+            <div class="text-caption">{{'Descripcion'}}</div>
+            <div class="absolute-bottom q-pa-md">
+              <q-btn no-caps color="black" label="Ingresar" class="q-px-md"
+              @click="$router.push('/niveles/' + item._id)" />
+            </div>
+          </div>
+          <div class="col-6 q-pa-none">
+            <q-img :src="item.img" style="height: 200px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
+          </div>
+        </div>
       </q-card>
-    </q-list>
+    </div>
   </div>
 </template>
 

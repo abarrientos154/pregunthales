@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-layout view="lHh Lpr lFf">
-      <q-header elevated class="bg-white">
+      <q-header v-if="rol !== 2" elevated class="bg-white">
         <q-toolbar>
           <q-btn flat dense round color="primary" icon="menu" aria-label="Menu" @click="DrawerOpen = !DrawerOpen"/>
 
@@ -9,8 +9,6 @@
             <img src="logo-pregunthales.jpg" style="width: 50px; height: 50px">
             <div class="text-bold text-primary column justify-center q-pl-sm">Pregunthales</div>
           </q-toolbar-title>
-
-          <div v-if="rol == 2" class="text-black">{{ultimaConeccion == {} ? user.ultima_coneccion.fecha : ultimaConeccion.fecha}}</div>
         </q-toolbar>
       </q-header>
 
@@ -33,9 +31,15 @@
         </q-list>
       </q-drawer>
 
-      <q-dialog v-model="up">
-        <big-data @file="getFile"></big-data>
-      </q-dialog>
+      <q-footer elevated v-if="rol === 2">
+        <div class="bg-primary shadow-2 full-width row justify-around q-py-sm" >
+          <div class="row items-center" v-for="(item, index) in menu" :key="index">
+            <q-btn :icon="item.icon" color="white" flat stack dense no-caps size="md" @click="item.label === 'Cerrar Sesión' ? cerrarSesion() : $router.push(item.ruta)">
+              <div class="text-caption">{{item.label}}</div>
+            </q-btn>
+          </div>
+        </div>
+      </q-footer>
 
       <q-page-container>
         <router-view />
@@ -45,30 +49,23 @@
 </template>
 
 <script>
-import BigData from '../components/BigData.vue'
 import { mapMutations } from 'vuex'
 export default {
-  components: { BigData },
   name: 'MainLayout',
   data () {
     return {
-      up: false,
-      hoy: new Date(),
-      fecha: '',
-      hora: '',
       rol: null,
       user: {},
-      ultimaConeccion: {},
       DrawerOpen: false,
       menu: [],
       menuAdmin: [
         {
           icon: 'menu_book',
           label: 'Asignaturas',
-          ruta: '/inicio_administrador'
+          ruta: '/administrador'
         },
         {
-          icon: 'article',
+          icon: 'person',
           label: 'Usuarios',
           ruta: ''
         },
@@ -84,21 +81,11 @@ export default {
           label: 'Inicio',
           ruta: '/inicio'
         },
-        {
-          icon: 'menu_book',
-          label: 'Asignaturas',
-          ruta: '/courses'
-        },
-        {
+        /* {
           icon: 'article',
           label: 'Examenes',
           ruta: '/exams'
-        },
-        {
-          icon: 'event',
-          label: 'Fecha Examen',
-          ruta: '/date_exams_users'
-        },
+        } */
         {
           icon: 'logout',
           label: 'Cerrar Sesión',
@@ -112,6 +99,19 @@ export default {
   },
   methods: {
     ...mapMutations('generals', ['logout']),
+    getUser () {
+      this.$api.get('user_info').then(v => {
+        if (v) {
+          this.rol = v.roles[0]
+          this.user = v
+          if (this.rol === 1) {
+            this.menu = this.menuAdmin
+          } else if (this.rol === 2) {
+            this.menu = this.menuUser
+          }
+        }
+      })
+    },
     cerrarSesion () {
       this.$q.loading.show({
         message: 'Cerrando Sesión...'
@@ -121,28 +121,6 @@ export default {
           this.$q.loading.hide()
           this.logout()
           this.$router.push('/login')
-        }
-      })
-    },
-    uploadData () {
-      this.up = true
-    },
-    getFile (f) {
-      if (f === false) {
-        this.up = false
-      }
-    },
-    getUser () {
-      this.$api.get('user_info').then(v => {
-        if (v) {
-          this.rol = v.roles[0]
-          // this.ultimaConeccion = v.ultima_coneccion
-          this.user = v
-          if (this.rol === 1) {
-            this.menu = this.menuAdmin
-          } else if (this.rol === 2) {
-            this.menu = this.menuUser
-          }
         }
       })
     },

@@ -1,5 +1,6 @@
 'use strict'
 const Answer = use("App/Models/Answer")
+const User = use("App/Models/User")
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -104,11 +105,18 @@ class AnswerController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request, response, auth }) {
     try {
+      const user = (await auth.getUser()).toJSON()
       let answer = request.body
       const update = await Answer.where('_id', params.id).update(answer)
-      response.send(update)
+      let result = (await Answer.query().where('_id', params.id).first()).toJSON()
+      const updateUser = await User.where('_id', user._id).update({points: user.points + result.total_point})
+      var otras = (await Answer.query().where({id: result.id, user_id: user._id}).fetch()).toJSON()
+      if (otras.length > 1) {
+        result.anterior = otras[otras.length - 2].total_point
+      }
+      response.send(result)
     } catch (error) {
       console.error(error.name + 'update:' + error.message);
     }

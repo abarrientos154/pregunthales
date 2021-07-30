@@ -67,10 +67,9 @@ export default {
         this.$api.post('login', this.form).then(res => {
           if (res) {
             this.user = res.SESSION_INFO
-            console.log('user', this.user)
             this.login(res)
             if (this.user.roles[0] === 1) {
-              this.$router.push('/inicio_administrador')
+              this.$router.push('/administrador')
             } else {
               this.$router.push('/inicio')
             }

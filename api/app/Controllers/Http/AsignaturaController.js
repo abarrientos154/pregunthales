@@ -1,11 +1,13 @@
 'use strict'
 
 const Asignatura = use("App/Models/Asignatura")
+const Answer = use("App/Models/Answer")
 // const { validate } = use("Validator")
 // const Helpers = use('Helpers')
 // const mkdirp = use('mkdirp')
 // const fs = require('fs')
 // var randomize = require('randomatic');
+const moment = require('moment')
 const User = use("App/Models/User")
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -22,9 +24,30 @@ class AsignaturaController {
     let asignatura = await Asignatura.find(params.id)
     response.send(asignatura)
   }
-  async getCourseWithTest ({ request, response, params }) {
+  async getCourseWithTest ({ auth, response, params }) {
     try {
-      let course = await Asignatura.with('tests').find(params.id)
+      const user = (await auth.getUser()).toJSON()
+      let course = (await Asignatura.query().where('_id', params.id).with('tests').first()).toJSON()
+      if (user.roles[0] === 2) {
+        for (let i = 0; i < course.tests.length; i++) {
+          var datos = (await Answer.query().where({id: course.tests[i].id, user_id: user._id}).fetch()).toJSON()
+          if (datos.length) {
+            var mayor = 0
+            var fecha = ''
+            for (let j = 0; j < datos.length; j++) {
+              if (datos[j].total_point > mayor) {
+                mayor = datos[j].total_point
+                fecha = moment(datos[j].created_at).format('DD/MM/YYYY')
+              }
+            }
+            course.tests[i].fecha_test = fecha
+            course.tests[i].total_point = mayor
+          } else {
+            course.tests[i].fecha_test = moment(course.tests[i].created_at).format('DD/MM/YYYY')
+            course.tests[i].total_point = 0
+          }
+        }
+      }
       response.send(course)
     } catch (error) {
       console.error(error.name + 'tests: ' + error.message);

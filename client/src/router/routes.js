@@ -5,25 +5,26 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       // Admin
-      { path: '/inicio_administrador', component: () => import('pages/admin/Inicio.vue') },
-      { path: '/examenes', component: () => import('pages/admin/Examenes.vue') },
+      { path: '/administrador', component: () => import('pages/admin/Inicio.vue') },
       { path: '/niveles/:id', component: () => import('pages/admin/Niveles.vue') },
-      { path: '/tests_exam/:id', component: () => import('pages/admin/TestsExam.vue') },
       { path: '/preguntas/:id', component: () => import('pages/admin/EditNivel.vue') },
+      { path: '/examenes', component: () => import('pages/admin/Examenes.vue') },
+      { path: '/tests_exam/:id', component: () => import('pages/admin/TestsExam.vue') },
       { path: '/exam/:id', component: () => import('pages/admin/Exam.vue') },
       { path: '/date_exams', component: () => import('pages/admin/DateExams.vue') },
       // User
       { path: '/inicio', component: () => import('pages/user/Inicio.vue') },
-      { path: '/courses', component: () => import('pages/user/Courses.vue') },
-      { path: '/tests-courses/:id', component: () => import('pages/user/TestsCourses.vue') },
-      { path: '/test-course/:id', component: () => import('pages/user/TestCourse.vue') },
+      { path: '/desafio', component: () => import('pages/user/Desafio.vue') },
+      { path: '/asignaturas', component: () => import('pages/user/Asignaturas.vue') },
+      { path: '/asignatura/niveles/:id', component: () => import('pages/user/Niveles.vue') },
       { path: '/exams', component: () => import('pages/user/Exams.vue') },
       { path: '/tests_exams/:id', component: () => import('pages/user/TestsExams.vue') },
-      { path: '/test-exam/:id', component: () => import('pages/user/TestExam.vue') },
-      { path: '/results/:id', component: () => import('pages/user/Results.vue') },
-      { path: '/date_exams_users', component: () => import('pages/user/DateExams.vue') }
+      { path: '/test-exam/:id', component: () => import('pages/user/TestExam.vue') }
     ]
   },
+
+  { path: '/nivel/:id', component: () => import('pages/user/NivelTest.vue') },
+
   { path: '/login', component: () => import('pages/Login.vue') },
   { path: '/registro', component: () => import('pages/Registro.vue') },
   {

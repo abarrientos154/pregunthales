@@ -83,8 +83,11 @@ class QuestionController {
       answers = Object.values(answers)
       let arr = []
       for (let i in answers) {
-        let ans = { titleAnswer: answers[i] }
+        let ans = { titleAnswer: answers[i], isActive: false }
         arr.push(ans)
+      }
+      for (let i = 0; i < arr.length; i++) {
+        arr[i].value = i === 0 ? 'A' : i === 1 ? 'B' : i === 2 ? 'C' : 'D'
       }
       quest.answers = arr
       quest.isActive = false
@@ -165,6 +168,7 @@ class QuestionController {
       answers = Object.values(answers)
       for (let i in answers) {
         quest.answers[i].titleAnswer = answers[i]
+        quest.answers[i].isActive = false
       }
       if (quest.file) {
         const profilePic = request.file('files', {
