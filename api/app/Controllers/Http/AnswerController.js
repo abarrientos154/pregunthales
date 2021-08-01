@@ -1,5 +1,6 @@
 'use strict'
 const Answer = use("App/Models/Answer")
+const Desafios = use("App/Models/Desafio")
 const User = use("App/Models/User")
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -19,7 +20,22 @@ class AnswerController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let desafio = (await Desafios.query().where({status: 0, desafiado_id: user._id}).first())
+    response.send(desafio)
+  }
+
+  async indexDesafiado ({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let desafios = (await Desafios.query().where({status: 0, desafiado_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
+    response.send(desafios)
+  }
+
+  async indexCreador ({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let desafios = (await Desafios.query().where({status: 0, creador_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
+    response.send(desafios)
   }
 
   /**
@@ -52,6 +68,16 @@ class AnswerController {
     }
   }
 
+  async storeDesafio ({ request, response }) {
+    try {
+      let desafio = request.body
+      let save = await Desafios.create(desafio)
+      response.send(save)
+    } catch (error) {
+      console.error(error.name + 'store: ' + error.message);
+    }
+  }
+
   /**
    * Display a single answer.
    * GET answers/:id
@@ -68,18 +94,26 @@ class AnswerController {
         const correctAnswer = test.questions[i].correct_answer - 1
         for (let j in test.questions[i].answers) {
           if (test.questions[i].answers[j].isActive === true) {
-            console.log('correctAnswer, j :>> ', correctAnswer, j);
             if (parseInt(correctAnswer) === parseInt(j)) {
               test.questions[i].answers[j].isRigth = true
-              console.log('sirve :>> ');
             } else {
-              console.log('sirve2 :>> ');
               test.questions[i].answers[j].isRigth = false
             }
           }
         }
       }
       response.send(test)
+    } catch (error) {
+      console.error(error.name + '1: ' + error.message)
+    }
+  }
+
+  async showDesafio ({ params, request, response, view }) {
+    try {
+      let desafio = (await Desafios.query().where({_id: params.id}).first()).toJSON()
+      desafio.creadorInfo = (await User.query().where({_id: desafio.creador_id}).first()).toJSON()
+      desafio.desafiadoInfo = (await User.query().where({_id: desafio.desafiado_id}).first()).toJSON()
+      response.send(desafio)
     } catch (error) {
       console.error(error.name + '1: ' + error.message)
     }

@@ -18,6 +18,22 @@
         </div>
       </q-scroll-area>
     </div>
+
+    <q-dialog v-model="alertaDesafio">
+      <q-card style="width:100%">
+        <q-card-section>
+          <div class="text-h6">Atención</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Te están desafiando
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn no-caps label="Ver desafio" color="primary" @click="$router.push('/desafio/' + idDesafio)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -26,6 +42,8 @@ export default {
   name: 'MainLayout',
   data () {
     return {
+      alertaDesafio: false,
+      idDesafio: '',
       type: [
         {
           img: 'noimg.png',
@@ -43,8 +61,17 @@ export default {
     }
   },
   mounted () {
+    this.getDesafio()
   },
   methods: {
+    async getDesafio () {
+      await this.$api.get('desafio').then(res => {
+        if (res) {
+          this.alertaDesafio = true
+          this.idDesafio = res._id
+        }
+      })
+    }
   }
 }
 </script>

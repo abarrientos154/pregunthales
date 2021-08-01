@@ -1,0 +1,50 @@
+<template>
+  <div>
+    <div class="q-py-sm row justify-center">
+      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    </div>
+
+    <div class="shadow-up-1 q-py-lg q-pl-md" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+      <div class="text-grey-8 text-h6">Tienda</div>
+      <div class="text-grey-8 text-caption">Conoce las mejores ofertas de productos</div>
+      <q-scroll-area class="q-mt-md" style="height: 300px; width: 100%;">
+        <div class="row no-wrap q-gutter-md">
+          <q-card flat style="width: 160px" clickable v-ripple v-for="(item, index) in option" :key="index"
+          @click="$router.push(item.ruta)">
+            <img :src="item.img" style="height: 200px; width: 100%; border-radius: 10px">
+            <div class="text-h6 text-grey-8">{{item.title}}</div>
+            <div class="text-caption text-grey-8">{{item.description}}</div>
+          </q-card>
+        </div>
+      </q-scroll-area>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'MainLayout',
+  data () {
+    return {
+      option: [
+        {
+          img: 'noimg.png',
+          title: 'Puntos',
+          description: 'Adquiere puntos para jugar contra amigos',
+          ruta: ''
+        },
+        {
+          img: 'noimg.png',
+          title: 'Membresia',
+          description: 'Adquiere los mejores para tu perfil',
+          ruta: ''
+        }
+      ]
+    }
+  },
+  mounted () {
+  },
+  methods: {
+  }
+}
+</script>

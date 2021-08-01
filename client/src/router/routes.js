@@ -14,7 +14,10 @@ const routes = [
       { path: '/date_exams', component: () => import('pages/admin/DateExams.vue') },
       // User
       { path: '/inicio', component: () => import('pages/user/Inicio.vue') },
+      { path: '/tienda', component: () => import('pages/user/Tienda.vue') },
+      { path: '/desafios', component: () => import('pages/user/Desafios.vue') },
       { path: '/desafio', component: () => import('pages/user/Desafio.vue') },
+      { path: '/desafio/:id', component: () => import('pages/user/Desafiado.vue') },
       { path: '/asignaturas', component: () => import('pages/user/Asignaturas.vue') },
       { path: '/asignatura/niveles/:id', component: () => import('pages/user/Niveles.vue') },
       { path: '/exams', component: () => import('pages/user/Exams.vue') },

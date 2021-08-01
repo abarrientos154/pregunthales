@@ -81,11 +81,16 @@ export default {
           label: 'Inicio',
           ruta: '/inicio'
         },
-        /* {
-          icon: 'article',
-          label: 'Examenes',
-          ruta: '/exams'
-        } */
+        {
+          icon: 'store',
+          label: 'Tienda',
+          ruta: '/tienda'
+        },
+        {
+          icon: 'circle_notifications',
+          label: 'Desafios',
+          ruta: '/desafios'
+        },
         {
           icon: 'logout',
           label: 'Cerrar Sesión',

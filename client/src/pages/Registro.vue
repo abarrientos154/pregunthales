@@ -79,7 +79,7 @@
           <div class="q-pb-sm row justify-center">
             <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
           </div>
-          <div class="text-center text-h6 text-grey-8">¿Quieres conocer <b>nuestra tienda</b>?</div>
+          <div class="text-center text-h6 text-grey-8">¿Quieres conocer <b @click="$router.push('/tienda')">nuestra tienda</b>?</div>
           <div class="row justify-center q-pt-md">
             <q-btn flat no-caps color="grey-8" label="Omitir" @click="$router.push('/inicio')" />
           </div>

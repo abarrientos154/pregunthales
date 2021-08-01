@@ -27,6 +27,10 @@
             >
             <q-carousel-slide :name="index + 1" class="q-pa-none" v-for="(pregunta, index) in questions" :key="index">
                 <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
+                <div class="absolute-top-right q-pa-md">
+                  <div class="text-h6 text-grey-9 text-right">Tiempo disponible</div>
+                  <div class="text-h6 text-grey-9 text-right">{{test.time}}</div>
+                </div>
                 <div class="row justify-center">
                     <img :src="baseuPregunta + pregunta._id" style="height: 400px; width: 100%">
                 </div>

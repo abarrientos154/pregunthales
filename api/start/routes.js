@@ -100,5 +100,11 @@ addPrefixToGroup(
     Route.put('answer/:id', 'AnswerController.update')
     Route.get('answerById/:id', 'AnswerController.show')
 
+    Route.post('desafio', 'AnswerController.storeDesafio')
+    Route.get('desafio', 'AnswerController.index')
+    Route.get('desafiado_desafios', 'AnswerController.indexDesafiado')
+    Route.get('creador_desafios', 'AnswerController.indexCreador')
+    Route.get('desafioById/:id', 'AnswerController.showDesafio')
+
   }).middleware("auth")
 );

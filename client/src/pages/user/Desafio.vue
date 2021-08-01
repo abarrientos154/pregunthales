@@ -111,6 +111,7 @@ export default {
       nivelSelec: null,
       baseuPerfil: '',
       baseuNivel: '',
+      user: {},
       courses: [],
       niveles: [],
       usuarios: [],
@@ -125,10 +126,18 @@ export default {
   mounted () {
     this.baseuPerfil = env.apiUrl + 'perfil_img/'
     this.baseuNivel = env.apiUrl + 'nivel_img/'
+    this.getUser()
     this.getAllUsers()
     this.getAsignaturas()
   },
   methods: {
+    async getUser () {
+      await this.$api.get('user_info').then(res => {
+        if (res) {
+          this.user = res
+        }
+      })
+    },
     async getAllUsers () {
       await this.$api.get('all_user').then(res => {
         if (res) {
@@ -141,14 +150,28 @@ export default {
       await this.$api.get('course').then(res => {
         if (res) {
           this.courses = res
-          console.log(res)
         }
       })
     },
-    desafiar () {
+    async desafiar () {
       this.$v.$touch()
       if (!this.$v.userSelec.$error && !this.$v.courseSelec.$error && !this.$v.nivelSelec.$error) {
-        // hola
+        this.$q.loading.show({
+          message: 'Enviando desafio...'
+        })
+        const desafio = {
+          course_id: this.courseSelec._id,
+          nivel_id: this.nivelSelec._id,
+          desafiado_id: this.userSelec._id,
+          creador_id: this.user._id,
+          status: 0
+        }
+        await this.$api.post('desafio', desafio).then(res => {
+          if (res) {
+            this.$q.loading.hide()
+            this.$router.go(-1)
+          }
+        })
       }
     },
     filterFn (val, update) {
