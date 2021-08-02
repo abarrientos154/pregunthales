@@ -67,7 +67,7 @@ export default {
         {
           icon: 'person',
           label: 'Usuarios',
-          ruta: ''
+          ruta: '/usuarios'
         },
         {
           icon: 'logout',

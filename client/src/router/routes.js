@@ -6,6 +6,7 @@ const routes = [
     children: [
       // Admin
       { path: '/administrador', component: () => import('pages/admin/Inicio.vue') },
+      { path: '/usuarios', component: () => import('pages/admin/Usuarios.vue') },
       { path: '/niveles/:id', component: () => import('pages/admin/Niveles.vue') },
       { path: '/preguntas/:id', component: () => import('pages/admin/EditNivel.vue') },
       { path: '/examenes', component: () => import('pages/admin/Examenes.vue') },
@@ -27,6 +28,7 @@ const routes = [
   },
 
   { path: '/nivel/:id', component: () => import('pages/user/NivelTest.vue') },
+  { path: '/nivel/:id/:idDesafio', component: () => import('pages/user/NivelTest.vue') },
 
   { path: '/login', component: () => import('pages/Login.vue') },
   { path: '/registro', component: () => import('pages/Registro.vue') },

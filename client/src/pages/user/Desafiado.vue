@@ -62,7 +62,24 @@ export default {
     responder () {
       this.$v.$touch()
       if (!this.$v.respuesta.$error) {
-        // hola
+        this.$q.loading.show({
+          message: 'Enviando respuesta...'
+        })
+        if (this.respuesta === 'Si') {
+          this.$api.put('desafio/' + this.$route.params.id, { status1: 1, status2: 1 }).then(res => {
+            if (res) {
+              this.$router.push('/desafios')
+              this.$q.loading.hide()
+            }
+          })
+        } else {
+          this.$api.put('desafio/' + this.$route.params.id, { status1: 3, status2: 3 }).then(res => {
+            if (res) {
+              this.$router.push('/desafios')
+              this.$q.loading.hide()
+            }
+          })
+        }
       }
     }
   }

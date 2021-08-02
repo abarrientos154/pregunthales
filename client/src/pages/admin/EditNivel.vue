@@ -13,8 +13,8 @@
 
     <div class="row justify-center">
       <div class="col col-xs-12 col-sm-11 col-md-10 col-lg-8 col-xl-6 q-mx-md q-my-sm">
-        <div class="column dimension no-wrap" v-if="questions.length > 0">
-          <q-card class=" dimensionC q-px-xl q-pt-md q-pb-lg q-ma-lg" v-for="(qt, index) in questions" :key="index">
+        <div class="column items-center q-py-md" v-if="questions.length > 0">
+          <q-card class="q-py-md q-mb-md" v-for="(qt, index) in questions" :key="index" style="width:100%">
             <div class="row items-start">
               <div class="col-3 row justify-center q-mr-sm">
                 <img :src="baseuPregunta + qt._id" style="width: 150px; height: 150px; border-radius: 10px"/>
@@ -133,12 +133,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.dimension {
-  min-width: 280px;
-}
-.dimensionC {
-  min-width: 270px;
-}
-</style>

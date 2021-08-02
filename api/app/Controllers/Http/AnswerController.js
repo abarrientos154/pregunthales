@@ -22,19 +22,19 @@ class AnswerController {
    */
   async index ({ request, response, auth }) {
     const user = (await auth.getUser()).toJSON()
-    let desafio = (await Desafios.query().where({status: 0, desafiado_id: user._id}).first())
+    let desafio = (await Desafios.query().where({status2: 0, desafiado_id: user._id}).first())
     response.send(desafio)
   }
 
   async indexDesafiado ({ request, response, auth }) {
     const user = (await auth.getUser()).toJSON()
-    let desafios = (await Desafios.query().where({status: 0, desafiado_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
+    let desafios = (await Desafios.query().where({desafiado_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
     response.send(desafios)
   }
 
   async indexCreador ({ request, response, auth }) {
     const user = (await auth.getUser()).toJSON()
-    let desafios = (await Desafios.query().where({status: 0, creador_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
+    let desafios = (await Desafios.query().where({creador_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
     response.send(desafios)
   }
 
@@ -129,6 +129,47 @@ class AnswerController {
    * @param {View} ctx.view
    */
   async edit ({ params, request, response, view }) {
+    let data = request.all()
+    const update = await Desafios.where('_id', params.id).update(data)
+    response.send(update)
+  }
+
+  async editDesafio ({ params, request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let recibido = request.all()
+    let id = (await Desafios.query().where('_id', params.id).first()).toJSON()
+    var data = {}
+    if (user._id === id.creador_id) {
+      data = {
+        total_point1: recibido.total_point,
+        correctas1: recibido.correctas,
+        omitidas1: recibido.omitidas,
+        status1: 2
+      }
+      if (id.status2 === 2) {
+        if (id.total_point2 > data.total_point1) {
+          data.ganador = 2
+        } else {
+          data.ganador = 1
+        }
+      }
+    } else {
+      data = {
+        total_point2: recibido.total_point,
+        correctas2: recibido.correctas,
+        omitidas2: recibido.omitidas,
+        status2: 2
+      }
+      if (id.status1 === 2) {
+        if (id.total_point1 > data.total_point2) {
+          data.ganador = 1
+        } else {
+          data.ganador = 2
+        }
+      }
+    }
+    const update = await Desafios.where('_id', params.id).update(data)
+    response.send(update)
   }
 
   /**
@@ -148,7 +189,8 @@ class AnswerController {
       const updateUser = await User.where('_id', user._id).update({points: user.points + result.total_point})
       var otras = (await Answer.query().where({id: result.id, user_id: user._id}).fetch()).toJSON()
       if (otras.length > 1) {
-        result.anterior = otras[otras.length - 2].total_point
+        var largo = otras.length - 2
+        result.anterior = otras[largo].total_point
       }
       response.send(result)
     } catch (error) {

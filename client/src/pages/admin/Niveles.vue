@@ -2,7 +2,7 @@
   <div class="q-pa-md column items-center">
     <div class="text-primary text-h5">{{course.name}}</div>
     <div class="text-black text-subtitle1 text-weight-bolder q-mb-lg">Niveles</div>
-    <q-list class="column items-center" style="width: 100%" v-if="tests.length > 0">
+    <div class="column items-center" style="width: 100%" v-if="tests.length > 0">
       <q-card v-for="(item,index) in tests" clickable :key="index" class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
         <div class="row">
           <div class="col-6 q-pa-sm">
@@ -17,7 +17,7 @@
           </div>
         </div>
       </q-card>
-    </q-list>
+    </div>
     <q-card v-else class="shadow-2 q-ma-md q-pa-md">
       <div class="text-center text-subtitle1">Actualmente sin niveles...</div>
     </q-card>

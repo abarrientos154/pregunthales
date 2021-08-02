@@ -26,7 +26,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          Te están desafiando
+          Tienes un desafio pendiente
         </q-card-section>
 
         <q-card-actions align="right">

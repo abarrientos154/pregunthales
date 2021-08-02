@@ -156,20 +156,35 @@ export default {
     async desafiar () {
       this.$v.$touch()
       if (!this.$v.userSelec.$error && !this.$v.courseSelec.$error && !this.$v.nivelSelec.$error) {
-        this.$q.loading.show({
-          message: 'Enviando desafio...'
-        })
-        const desafio = {
-          course_id: this.courseSelec._id,
-          nivel_id: this.nivelSelec._id,
-          desafiado_id: this.userSelec._id,
-          creador_id: this.user._id,
-          status: 0
-        }
-        await this.$api.post('desafio', desafio).then(res => {
-          if (res) {
-            this.$q.loading.hide()
-            this.$router.go(-1)
+        await this.$api.get('testById/' + this.nivelSelec._id).then(async v => {
+          if (v) {
+            this.$q.loading.show({
+              message: 'Enviando desafio...'
+            })
+            const desafio = {
+              title: this.nivelSelec.title,
+              total_questions: v.questions.length,
+              family_id: this.nivelSelec.family_id,
+              id: this.nivelSelec.id,
+              nivel_id: this.nivelSelec._id,
+              desafiado_id: this.userSelec._id,
+              creador_id: this.user._id,
+              ganador: 0,
+              status1: 0,
+              status2: 0,
+              questions: v.questions.map(v => {
+                return {
+                  ...v,
+                  selected: false
+                }
+              })
+            }
+            await this.$api.post('desafio', desafio).then(res => {
+              if (res) {
+                this.$q.loading.hide()
+                this.$router.go(-1)
+              }
+            })
           }
         })
       }

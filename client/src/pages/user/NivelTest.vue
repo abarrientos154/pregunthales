@@ -14,7 +14,7 @@
           <div class="text-center text-h6 text-grey-8">Comenzar <b>{{test.title}}</b></div>
         </div>
         <div class="absolute-bottom row justify-center q-py-md">
-          <q-btn no-caps color="black" label="Comenzar" size="lg" style="width: 90%" @click="start()" />
+          <q-btn no-caps color="black" label="Comenzar" size="lg" style="width: 90%" @click="!desafio ? start() : startDesafio()" />
         </div>
       </q-carousel-slide>
 
@@ -29,7 +29,7 @@
                 <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
                 <div class="absolute-top-right q-pa-md">
                   <div class="text-h6 text-grey-9 text-right">Tiempo disponible</div>
-                  <div class="text-h6 text-grey-9 text-right">{{test.time}}</div>
+                  <div class="text-h6 text-grey-9 text-right">{{timeTest}}</div>
                 </div>
                 <div class="row justify-center">
                     <img :src="baseuPregunta + pregunta._id" style="height: 400px; width: 100%">
@@ -59,7 +59,7 @@
           </div>
           <div class="text-center text-h6 text-grey-8">Tu puntuación fue: {{test.total_point}}</div>
           <div class="text-center text-h6 text-grey-8">Preguntas omitidas: {{test.omitidas}}</div>
-          <div class="text-center text-h6 text-grey-8">Puntuación anterior: {{test.anterior ? test.anterior : 'No hay'}}</div>
+          <div v-if="!desafio" class="text-center text-h6 text-grey-8">Puntuación anterior: {{test.anterior ? test.anterior : 'No hay'}}</div>
           <div class="text-center text-h6 text-grey-8">Tiempo de término: </div>
         </div>
         <div class="column items-center q-py-md">
@@ -76,8 +76,11 @@ export default {
     return {
       user: null,
       answerId: null,
+      desafio: false,
       baseuNivel: '',
       baseuPregunta: '',
+      idDesafio: '',
+      timeTest: 0,
       slide: 1,
       slide2: 1,
       test: {},
@@ -87,6 +90,10 @@ export default {
   mounted () {
     this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.baseuPregunta = env.apiUrl + 'pregunta_img/'
+    if (this.$route.params.idDesafio) {
+      this.desafio = true
+      this.idDesafio = this.$route.params.idDesafio
+    }
     this.getTestById()
     this.getUser()
   },
@@ -106,6 +113,7 @@ export default {
         if (res) {
           this.$q.loading.hide()
           this.test = res
+          this.timeTest = res.time
           this.questions = this.test.questions
         } else {
           this.$q.loading.hide()
@@ -141,8 +149,37 @@ export default {
             if (res) {
               this.answerId = res._id
               this.slide = 2
+              const time = this.timeTest * 60000
+              const vm = this
+              setTimeout(function () { vm.save() }, time)
             }
           })
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+      } else {
+        this.$q.dialog({
+          title: 'Atención',
+          message: 'Aún no hay preguntas para este nivel',
+          cancel: false,
+          persistent: true
+        }).onOk(() => {
+          this.$router.go(-1)
+        })
+      }
+    },
+    async startDesafio () {
+      if (this.questions.length) {
+        this.$q.dialog({
+          title: 'Confirma',
+          message: '¿Seguro deseas iniciar el test? Tienes ' + this.test.time + ' minutos para resolverlo',
+          cancel: true,
+          persistent: true
+        }).onOk(async () => {
+          this.slide = 2
+          const time = this.timeTest * 60000
+          const vm = this
+          setTimeout(function () { vm.save() }, time)
         }).onCancel(() => {
           // console.log('>>>> Cancel')
         })
@@ -178,33 +215,28 @@ export default {
       this.$refs.carousel.next()
     },
     async save () {
-      this.$q.dialog({
-        title: 'Confirma',
-        message: '¿Seguro deseas enviar tus respuestas? Una vez enviadas no se podrán modificar',
-        cancel: true,
-        persistent: true
-      }).onOk(async () => {
-        this.$q.loading.show({
-          message: 'Evaluando Datos...'
-        })
-        let num = 0
-        let num2 = 0
-        let num3 = 0
-        for (let i = 0; i < this.questions.length; i++) {
-          if (this.questions[i].selected) {
-            num = num + 1
-          }
-          if (!this.questions[i].isActive) {
-            num2 = num2 + 1
-          }
+      this.$q.loading.show({
+        message: 'Terminando prueba...'
+      })
+      let num = 0
+      let num2 = 0
+      let num3 = 0
+      for (let i = 0; i < this.questions.length; i++) {
+        if (this.questions[i].selected) {
+          num = num + 1
         }
-        num3 = (num * this.test.point) / this.test.questions.length
-        const answer = {
-          questions: this.questions,
-          total_point: num3,
-          correctas: num,
-          omitidas: num2
+        if (!this.questions[i].isActive) {
+          num2 = num2 + 1
         }
+      }
+      num3 = (num * this.test.point) / this.test.questions.length
+      const answer = {
+        total_point: num3,
+        correctas: num,
+        omitidas: num2
+      }
+      if (!this.desafio) {
+        answer.questions = this.questions
         await this.$api.put('answer/' + this.answerId, answer).then(res => {
           if (res) {
             this.test = res
@@ -212,9 +244,15 @@ export default {
             this.slide = 3
           }
         })
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
-      })
+      } else {
+        await this.$api.put('desafio_value/' + this.idDesafio, answer).then(res => {
+          if (res) {
+            this.test = answer
+            this.$q.loading.hide()
+            this.slide = 3
+          }
+        })
+      }
     }
   }
 }
