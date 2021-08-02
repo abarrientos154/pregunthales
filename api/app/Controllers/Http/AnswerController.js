@@ -139,6 +139,8 @@ class AnswerController {
     let recibido = request.all()
     let id = (await Desafios.query().where('_id', params.id).first()).toJSON()
     var data = {}
+    let user1 = (await User.find(id.creador_id))
+    let user2 = (await User.find(id.desafiado_id))
     if (user._id === id.creador_id) {
       data = {
         total_point1: recibido.total_point,
@@ -149,8 +151,24 @@ class AnswerController {
       if (id.status2 === 2) {
         if (id.total_point2 > data.total_point1) {
           data.ganador = 2
+          user2.points = user2.points + id.total_point2
+          if (user1.points >= id.total_point2) {
+            user1.points = user1.points - id.total_point2
+          } else {
+            user1.points = 0
+          }
+          user1.save()
+          user2.save()
         } else {
           data.ganador = 1
+          user1.points = user1.points + data.total_point1
+          if (user2.points >= data.total_point1) {
+            user2.points = user2.points - data.total_point1
+          } else {
+            user2.points = 0
+          }
+          user1.save()
+          user2.save()
         }
       }
     } else {
@@ -163,8 +181,24 @@ class AnswerController {
       if (id.status1 === 2) {
         if (id.total_point1 > data.total_point2) {
           data.ganador = 1
+          user1.points = user1.points + id.total_point1
+          if (user2.points >= id.total_point1) {
+            user2.points = user2.points - id.total_point1
+          } else {
+            user2.points = 0
+          }
+          user1.save()
+          user2.save()
         } else {
           data.ganador = 2
+          user2.points = user2.points + data.total_point2
+          if (user1.points >= data.total_point2) {
+            user1.points = user1.points - data.total_point2
+          } else {
+            user1.points = 0
+          }
+          user1.save()
+          user2.save()
         }
       }
     }

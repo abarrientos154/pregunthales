@@ -36,10 +36,18 @@
                 </div>
                 <div class="shadow-up-1 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
                     <div class="text-subtitle1 text-grey-9 text-center q-pa-md">{{pregunta.question}}</div>
-                    <div class="row justify-around" style="width:100%">
-                        <div class="col-6 q-px-xs q-pb-md" v-for="(item, index2) in pregunta.answers" :key="index2">
-                            <q-btn no-caps :outline="item.isActive ? false : true" color="primary" :text-color="item.isActive ? 'white' : 'grey-9'" :label="item.titleAnswer" style="width:100%"
-                            @click="answerSelected(item, pregunta)" />
+                    <div class="column justify-around" style="width:100%">
+                        <div @click="answerSelected(item, pregunta)" class="q-px-xs q-pb-md" v-for="(item, index2) in pregunta.answers" :key="index2">
+                            <!-- <q-btn no-caps :outline="item.isActive ? false : true" color="primary" :text-color="item.isActive ? 'white' : 'grey-9'" :label="item.titleAnswer" style="width:100%"
+                            @click="answerSelected(item, pregunta)" /> -->
+                            <q-field standout="bg-primary text-white" stack-label>
+                              <template v-slot:control>
+                                <div class="row no-wrap" tabindex="0">
+                                  <div class="text-bold q-pr-sm">{{index2 === 0 ? 'A)' : index2 === 1 ? 'B)' : index2 === 2 ? 'C)' : 'D)'}}</div>
+                                  <div>{{item.titleAnswer}}</div>
+                                </div>
+                              </template>
+                            </q-field>
                         </div>
                     </div>
                     <div class="column items-center q-py-md" style="width:100%;">
@@ -77,6 +85,7 @@ export default {
       user: null,
       answerId: null,
       desafio: false,
+      tiempo: null,
       baseuNivel: '',
       baseuPregunta: '',
       idDesafio: '',
@@ -151,7 +160,7 @@ export default {
               this.slide = 2
               const time = this.timeTest * 60000
               const vm = this
-              setTimeout(function () { vm.save() }, time)
+              this.tiempo = setTimeout(function () { vm.save() }, time)
             }
           })
         }).onCancel(() => {
@@ -179,7 +188,7 @@ export default {
           this.slide = 2
           const time = this.timeTest * 60000
           const vm = this
-          setTimeout(function () { vm.save() }, time)
+          this.tiempo = setTimeout(function () { vm.save() }, time)
         }).onCancel(() => {
           // console.log('>>>> Cancel')
         })
@@ -218,6 +227,7 @@ export default {
       this.$q.loading.show({
         message: 'Terminando prueba...'
       })
+      clearTimeout(this.tiempo)
       let num = 0
       let num2 = 0
       let num3 = 0

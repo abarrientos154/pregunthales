@@ -29,7 +29,7 @@
                 </q-card>
                   <div v-for="(item, index2) in qt.answers" :key="index2">
                     <q-item clickable>
-                      <div class="row items-center">
+                      <div class="row items-start no-wrap">
                         <div class="text-bold q-pr-sm">{{index2 == 0 ? 'A)' : index2 == 1 ? 'B)' : index2 == 2 ? 'C)' : 'D)'}}</div>
                         <div class="text-subtitle1">{{item.titleAnswer}}</div>
                       </div>
