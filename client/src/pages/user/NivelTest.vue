@@ -6,7 +6,7 @@
       class="window-height"
     >
       <q-carousel-slide :name="1" class="q-pa-none">
-        <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$router.go(-1)" />
+        <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$router.push('/desafios')" />
         <div class="absolute-center" style="width:100%">
           <div class="q-pb-sm row justify-center">
             <img :src="baseuNivel + test._id" style="height: 280px; width: 280px">

@@ -4,11 +4,11 @@
       <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
     </div>
 
-    <div class="shadow-up-1 q-py-lg q-pl-md" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
-      <div class="text-grey-8 text-h6">¿Qué te gustaría hacer?</div>
-      <div class="text-grey-8 text-caption">Escoge donde quieres jugar</div>
-      <q-scroll-area class="q-mt-md" style="height: 300px; width: 100%;">
-        <div class="row no-wrap q-gutter-md">
+    <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+      <div class="text-grey-8 text-h6 q-pl-md">¿Qué te gustaría hacer?</div>
+      <div class="text-grey-8 text-caption q-pl-md">Escoge donde quieres jugar</div>
+      <q-scroll-area horizontal class="q-mt-md" style="height: 300px; width: 100%;">
+        <div class="row no-wrap q-px-md q-gutter-md">
           <q-card flat style="width: 160px" clickable v-ripple v-for="(item, index) in type" :key="index"
           @click="$router.push(item.ruta)">
             <img :src="item.img" style="height: 200px; width: 100%; border-radius: 10px">
@@ -54,7 +54,7 @@ export default {
         {
           img: 'noimg.png',
           title: 'Reta a un amigo',
-          description: 'Compite contra un amigo',
+          description: 'Compite contra un amigo y pon a prueba tu entrenamiento',
           ruta: '/desafio'
         }
       ]

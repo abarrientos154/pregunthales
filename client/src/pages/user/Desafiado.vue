@@ -68,7 +68,7 @@ export default {
         if (this.respuesta === 'Si') {
           this.$api.put('desafio/' + this.$route.params.id, { status1: 1, status2: 1 }).then(res => {
             if (res) {
-              this.$router.push('/desafios')
+              this.$router.push('/nivel/' + this.desafio.nivel_id + '/' + this.desafio._id)
               this.$q.loading.hide()
             }
           })

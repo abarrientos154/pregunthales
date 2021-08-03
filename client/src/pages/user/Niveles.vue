@@ -25,7 +25,7 @@
         </q-card>
       </div>
       <q-card v-else class="shadow-2 q-ma-md q-pa-md">
-        <div class="text-center text-subtitle1">Actualmente sin Temas...</div>
+        <div class="text-center text-subtitle1">Actualmente sin nieveles...</div>
       </q-card>
     </div>
   </div>
