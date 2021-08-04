@@ -71,7 +71,7 @@ export default {
             if (this.user.roles[0] === 1) {
               this.$router.push('/administrador')
             } else {
-              this.$router.push('/login')
+              this.$router.push('/inicio')
             }
           } else {
             console.log('error de ususario')

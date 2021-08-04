@@ -29,7 +29,13 @@
                 <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
                 <div class="absolute-top-right q-pa-md">
                   <div class="text-h6 text-grey-9 text-right">Tiempo disponible</div>
-                  <div class="text-h6 text-grey-9 text-right">{{timeTest}}</div>
+                  <q-field outlined dense bg-color="white" stack-label>
+                    <template v-slot:control>
+                      <div class="row justify-end no-wrap" tabindex="0" style="width:100%">
+                        <div class="text-bold">{{minutos + ':' + segundos}}</div>
+                      </div>
+                    </template>
+                  </q-field>
                 </div>
                 <div class="row justify-center">
                     <img :src="baseuPregunta + pregunta._id" style="height: 400px; width: 100%">
@@ -38,8 +44,6 @@
                     <div class="text-subtitle1 text-grey-9 text-center q-pa-md">{{pregunta.question}}</div>
                     <div class="column justify-around" style="width:100%">
                         <div @click="answerSelected(item, pregunta)" class="q-px-xs q-pb-md" v-for="(item, index2) in pregunta.answers" :key="index2">
-                            <!-- <q-btn no-caps :outline="item.isActive ? false : true" color="primary" :text-color="item.isActive ? 'white' : 'grey-9'" :label="item.titleAnswer" style="width:100%"
-                            @click="answerSelected(item, pregunta)" /> -->
                             <q-field standout="bg-primary text-white" stack-label>
                               <template v-slot:control>
                                 <div class="row no-wrap" tabindex="0">
@@ -71,7 +75,7 @@
           <div class="text-center text-h6 text-grey-8">Tiempo de término: </div>
         </div>
         <div class="column items-center q-py-md">
-          <q-btn no-caps color="black" label="Ir al inicio" size="lg" style="width: 90%" @click="$router.go(-1)" />
+          <q-btn no-caps color="black" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         </div>
       </q-carousel-slide>
     </q-carousel>
@@ -85,13 +89,15 @@ export default {
       user: null,
       answerId: null,
       desafio: false,
-      tiempo: null,
+      timeCounter: null,
       baseuNivel: '',
       baseuPregunta: '',
       idDesafio: '',
       timeTest: 0,
       slide: 1,
       slide2: 1,
+      minutos: 0,
+      segundos: 0,
       test: {},
       questions: []
     }
@@ -133,6 +139,31 @@ export default {
         }
       })
     },
+    valueTiempo () {
+      this.minutos = this.timeTest
+      this.segundos = 60
+      this.timeCounter = setInterval(timer, 1000)
+      const vm = this
+
+      function timer () {
+        if (vm.segundos > 0) {
+          if (vm.minutos > 0) {
+            vm.segundos = vm.segundos - 1
+          } else {
+            vm.segundos = vm.segundos - 1
+          }
+        } else {
+          if (vm.minutos > 0) {
+            vm.minutos = vm.minutos - 1
+            vm.segundos = 60
+          } else {
+            clearInterval(vm.timeCounter)
+            vm.save()
+          }
+        }
+        return vm.minutos
+      }
+    },
     async start () {
       if (this.questions.length) {
         this.$q.dialog({
@@ -158,9 +189,7 @@ export default {
             if (res) {
               this.answerId = res._id
               this.slide = 2
-              const time = this.timeTest * 60000
-              const vm = this
-              this.tiempo = setTimeout(function () { vm.save() }, time)
+              this.valueTiempo()
             }
           })
         }).onCancel(() => {
@@ -186,9 +215,7 @@ export default {
           persistent: true
         }).onOk(async () => {
           this.slide = 2
-          const time = this.timeTest * 60000
-          const vm = this
-          this.tiempo = setTimeout(function () { vm.save() }, time)
+          this.valueTiempo()
         }).onCancel(() => {
           // console.log('>>>> Cancel')
         })
@@ -227,7 +254,7 @@ export default {
       this.$q.loading.show({
         message: 'Terminando prueba...'
       })
-      clearTimeout(this.tiempo)
+      clearInterval(this.timeCounter)
       let num = 0
       let num2 = 0
       let num3 = 0
