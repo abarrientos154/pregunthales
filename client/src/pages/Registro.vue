@@ -5,36 +5,29 @@
       animated
       class="window-height"
     >
-      <q-carousel-slide :name="1" class="q-pa-none" @click="slide = 2">
-        <div class="absolute-center" style="width:100%">
-          <div class="q-pb-sm row justify-center">
-            <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
-          </div>
-          <div class="text-center text-h6 text-grey-8">Bienvenido a <b>Pregunthales</b></div>
+      <q-carousel-slide :name="1" class="q-pa-none" img-src="app movil 1.png" @click="slide = 2">
+        <div class="absolute-bottom q-pb-lg" style="width:100%">
+          <div class="text-center text-h6 text-indigo-10">Bienvenido a <b>Pregunthales</b></div>
         </div>
       </q-carousel-slide>
 
       <q-carousel-slide :name="2" class="q-pa-none">
-        <div>
-          <q-btn round flat icon="arrow_back" @click="$router.go(-1)" />
-        </div>
-        <div class="q-pb-sm row justify-center">
-          <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+        <div class="row justify-center">
+          <q-img src="app movil 5.png" style="height: 280px; width: 100%">
+            <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+          </q-img>
         </div>
 
         <div class="shadow-up-1 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
           <div class="text-primary text-h6 q-py-md">Registro de usuario</div>
-          <div class="row justify-center">
+          <div class="column items-center">
             <q-avatar size="150px" class="bg-grey-5">
-              <q-img :src="perfile ? imgPerfil : ''" style="width: 100%; height: 100%">
+              <q-img :src="perfile ? imgPerfil : 'app movil 30.png'" style="width: 100%; height: 100%">
                 <q-file class="absolute-center" borderless v-model="perfile" @input="changeProfile()" accept=".jpg, image/*" style="width: 100%; height: 100%; font-size: 0px">
-                  <div class="absolute-center column items-center q-mt-xl full-width">
-                    <q-icon name="cloud_upload" size="50px" color="white" />
-                  <div :class="$v.perfile.$error ? 'text-negative' : 'text-grey-9'" style="font-size: 15px">Selecciona avatar</div>
-                  </div>
                 </q-file>
               </q-img>
             </q-avatar>
+            <div :class="$v.perfile.$error ? 'text-negative text-center' : 'text-grey-8 text-center'" style="font-size: 15px">Selecciona avatar</div>
           </div>
 
           <div class="row" style="width: 70%; min-width: 300px">
@@ -74,14 +67,11 @@
         </div>
       </q-carousel-slide>
 
-      <q-carousel-slide :name="3" class="q-pa-none">
-        <div class="absolute-center" style="width:100%">
-          <div class="q-pb-sm row justify-center">
-            <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
-          </div>
-          <div class="text-center text-h6 text-grey-8">¿Quieres conocer <b @click="$router.push('/login')">nuestra tienda</b>?</div>
-          <div class="row justify-center q-pt-md">
-            <q-btn flat no-caps color="grey-8" label="Omitir" @click="$router.push('/inicio')" />
+      <q-carousel-slide :name="3" class="q-pa-none" img-src="app movil 6.png">
+        <div class="absolute-bottom q-pb-xl" style="width:100%">
+          <div class="text-center text-h6 text-indigo-10">¿Quieres conocer <b @click="$router.push('/login')">nuestra tienda</b>?</div>
+          <div class="row justify-center">
+            <q-btn flat no-caps color="indigo-10" label="Omitir" @click="$router.push('/inicio')" />
           </div>
         </div>
       </q-carousel-slide>

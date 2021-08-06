@@ -5,16 +5,16 @@
       animated
       class="window-height"
     >
-      <q-carousel-slide :name="1" class="q-pa-none">
-        <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$router.push('/desafios')" />
+      <q-carousel-slide :name="1" class="q-pa-none" img-src="app movil 12.png">
+        <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         <div class="absolute-center" style="width:100%">
           <div class="q-pb-sm row justify-center">
             <img :src="baseuNivel + test._id" style="height: 280px; width: 280px">
           </div>
-          <div class="text-center text-h6 text-grey-8">Comenzar <b>{{test.title}}</b></div>
+          <div class="text-center text-h6 text-white">Comenzar <b>{{test.title}}</b></div>
         </div>
         <div class="absolute-bottom row justify-center q-py-md">
-          <q-btn no-caps color="black" label="Comenzar" size="lg" style="width: 90%" @click="!desafio ? start() : startDesafio()" />
+          <q-btn no-caps color="purple" label="Comenzar" size="lg" style="width: 90%" @click="!desafio ? start() : startDesafio()" />
         </div>
       </q-carousel-slide>
 
@@ -28,7 +28,7 @@
             <q-carousel-slide :name="index + 1" class="q-pa-none" v-for="(pregunta, index) in questions" :key="index">
                 <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
                 <div class="absolute-top-right q-pa-md">
-                  <div class="text-h6 text-grey-9 text-right">Tiempo disponible</div>
+                  <div class="text-h6 text-black text-right">Tiempo disponible</div>
                   <q-field outlined dense bg-color="white" stack-label>
                     <template v-slot:control>
                       <div class="row justify-end no-wrap" tabindex="0" style="width:100%">
@@ -63,19 +63,14 @@
         </q-carousel>
       </q-carousel-slide>
 
-      <q-carousel-slide :name="3" class="q-pa-none column justify-between" style="height:auto">
-        <div class="text-center text-grey-8 text-h6 q-pt-md">Examen finalizado con éxito</div>
-        <div style="width:100%">
-          <div class="q-pb-sm row justify-center">
-            <img :src="baseuNivel + $route.params.id" style="height: 280px; width: 280px">
-          </div>
-          <div class="text-center text-h6 text-grey-8">Tu puntuación fue: {{test.total_point}}</div>
-          <div class="text-center text-h6 text-grey-8">Preguntas omitidas: {{test.omitidas}}</div>
-          <div v-if="!desafio" class="text-center text-h6 text-grey-8">Puntuación anterior: {{test.anterior ? test.anterior : 'No hay'}}</div>
-          <div class="text-center text-h6 text-grey-8">Tiempo de término: </div>
-        </div>
+      <q-carousel-slide :name="3" class="q-pa-none column justify-between" style="height:auto" img-src="app movil 12.png">
+        <div class="text-center text-white text-h6 q-pt-md">Examen finalizado con éxito</div>
         <div class="column items-center q-py-md">
-          <q-btn no-caps color="black" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
+          <div class="text-center text-h6 text-white">Tu puntuación fue: {{test.total_point}} puntos</div>
+          <div class="text-center text-h6 text-white">Preguntas omitidas: {{test.omitidas}}</div>
+          <div v-if="!desafio" class="text-center text-h6 text-white">Puntuación anterior: {{test.anterior ? test.anterior : 'No hay'}} puntos</div>
+          <div class="text-center text-h6 text-white q-pb-md">Tiempo de término: </div>
+          <q-btn no-caps color="purple" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         </div>
       </q-carousel-slide>
     </q-carousel>
@@ -268,7 +263,7 @@ export default {
       }
       num3 = (num * this.test.point) / this.test.questions.length
       const answer = {
-        total_point: num3,
+        total_point: Math.floor(num3),
         correctas: num,
         omitidas: num2
       }

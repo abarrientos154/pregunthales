@@ -1,8 +1,8 @@
 <template>
   <div>
-    <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$router.go(-1)" />
-    <div class="q-py-sm row justify-center">
-      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="row justify-center">
+      <img src="app movil 4.png" style="height: 280px; width: 100%">
     </div>
 
     <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
@@ -92,13 +92,13 @@
         <div class="text-center text-caption text-grey-9 q-pb-md">Resultados del desafio</div>
         <div class="row items-center q-py-md">
           <div class="q-pr-sm">
-            <q-img :src="desafio.ganador === 1 ? baseuPerfil + desafio.creador_id : baseuPerfil + desafio.desafiado_id" style="width:130px; height:130px; border-radius: 100%" />
+            <q-img :src="desafio.ganador === 1 ? baseuPerfil + desafio.creador_id : baseuPerfil + desafio.desafiado_id" style="width:110px; height:110px; border-radius: 100%" />
           </div>
           <div>
             <div class="text-h5 text-grey-8 text-bold">Ganador</div>
             <div class="text-grey-9">{{desafio.ganador === 1 ? desafio.creadorInfo.name : desafio.desafiadoInfo.name}}</div>
-            <div class="text-caption text-grey-8"><b>Posición en el ranking: </b>{{desafio.ganador === 1 ? desafio.creadorInfo.points : desafio.desafiadoInfo.points}}</div>
-            <div class="text-caption text-grey-8 q-pt-sm"><b>Puntaje obtenido: </b>{{desafio.ganador === 1 ? desafio.total_point1 : desafio.total_point2}}</div>
+            <div class="text-caption text-grey-8"><b>Ranking: </b>{{desafio.ganador === 1 ? desafio.creadorInfo.points : desafio.desafiadoInfo.points}}</div>
+            <div class="text-caption text-grey-8"><b>Puntaje obtenido: </b>{{desafio.ganador === 1 ? desafio.total_point1 : desafio.total_point2}}</div>
           </div>
         </div>
         <div class="row items-center q-py-md q-pl-xl">
@@ -108,8 +108,8 @@
           <div>
             <div class="text-h6 text-grey-8 text-bold">Perdedor</div>
             <div class="text-caption text-grey-9">{{desafio.ganador === 2 ? desafio.creadorInfo.name : desafio.desafiadoInfo.name}}</div>
-            <div class="text-caption text-grey-8"><b>Posición en el ranking: </b>{{desafio.ganador === 2 ? desafio.creadorInfo.points : desafio.desafiadoInfo.points}}</div>
-            <div class="text-caption text-grey-8 q-pt-sm"><b>Puntaje obtenido: </b>{{desafio.ganador === 2 ? desafio.total_point1 : desafio.total_point2}}</div>
+            <div class="text-caption text-grey-8"><b>Ranking: </b>{{desafio.ganador === 2 ? desafio.creadorInfo.points : desafio.desafiadoInfo.points}}</div>
+            <div class="text-caption text-grey-8"><b>Puntaje obtenido: </b>{{desafio.ganador === 2 ? desafio.total_point1 : desafio.total_point2}}</div>
           </div>
         </div>
       </q-card>

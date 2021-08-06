@@ -18,21 +18,21 @@ const asignaturaData = [
     _id: new ObjectId('60748c7ca06b4e9171dfeb02'),
     name: 'Español',
     description: 'Descripción de la materia',
-    img: 'noimg.png',
+    img: 'app movil 21.png',
     status: false
   },
   {
     _id: new ObjectId('60748c7ca06b4e9171dfeafc'),
     name: 'Matemática',
     description: 'Descripción de la materia',
-    img: 'noimg.png',
+    img: 'app movil 22.png',
     status: false
   },
   {
     _id: new ObjectId('60748c7ca06b4e9171dfeafd'),
     name: 'Todos los temas',
     description: 'Descripción de la materia',
-    img: 'noimg.png',
+    img: 'app movil 23.png',
     status: false
   }
 ]

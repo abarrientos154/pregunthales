@@ -1,8 +1,8 @@
 <template>
   <div>
-    <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$router.go(-1)" />
-    <div class="q-py-sm row justify-center">
-      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="row justify-center">
+      <img src="app movil 2.png" style="height: 280px; width: 100%">
     </div>
 
     <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">

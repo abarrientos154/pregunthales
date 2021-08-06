@@ -16,6 +16,7 @@ const routes = [
       // User
       { path: '/inicio', component: () => import('pages/user/Inicio.vue') },
       { path: '/tienda', component: () => import('pages/user/Tienda.vue') },
+      { path: '/carro_de_compra/:compra', component: () => import('pages/user/CarroCompra.vue') },
       { path: '/desafios', component: () => import('pages/user/Desafios.vue') },
       { path: '/desafio', component: () => import('pages/user/Desafio.vue') },
       { path: '/desafio/:id', component: () => import('pages/user/Desafiado.vue') },

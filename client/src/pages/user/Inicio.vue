@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="q-py-sm row justify-center">
-      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    <div class="row justify-center">
+      <q-img src="app movil 14.png" style="height: 280px; width: 100%" />
     </div>
 
     <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
@@ -46,13 +46,13 @@ export default {
       idDesafio: '',
       type: [
         {
-          img: 'noimg.png',
+          img: 'app movil 24.png',
           title: 'Jugar solo',
           description: 'Compite contigo mismo y entrena para obtener mejores resultados',
           ruta: '/asignaturas'
         },
         {
-          img: 'noimg.png',
+          img: 'app movil 25.png',
           title: 'Reta a un amigo',
           description: 'Compite contra un amigo y pon a prueba tu entrenamiento',
           ruta: '/desafio'

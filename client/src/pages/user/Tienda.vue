@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="q-py-sm row justify-center">
-      <img src="logo-pregunthales.jpg" style="height: 280px; max-width: 280px">
+    <div class="row justify-center">
+      <img src="app movil 16.png" style="height: 280px; width: 100%">
     </div>
 
     <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
@@ -28,16 +28,16 @@ export default {
     return {
       option: [
         {
-          img: 'noimg.png',
+          img: 'app movil 19.png',
           title: 'Puntos',
           description: 'Adquiere puntos para jugar contra amigos',
-          ruta: ''
+          ruta: '/carro_de_compra/puntos'
         },
         {
-          img: 'noimg.png',
+          img: 'app movil 20.png',
           title: 'Membresia',
           description: 'Adquiere los mejores para tu perfil',
-          ruta: ''
+          ruta: '/carro_de_compra/membresia'
         }
       ]
     }
