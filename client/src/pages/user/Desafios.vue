@@ -5,7 +5,7 @@
       <img src="app movil 4.png" style="height: 280px; width: 100%">
     </div>
 
-    <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+    <div class="shadow-up-1 q-py-lg full-width bg-white" style="position:absolute; top:265px; padding-bottom:70px; border-top-left-radius: 20px; border-top-right-radius: 20px">
       <div class="text-grey-8 text-h6 q-pl-md">Desafios</div>
       <div class="text-grey-8 text-caption q-pl-md">Desafios a los que has sido convocado</div>
       <div v-if="desafiado.length > 0" class="column items-center q-mt-md">

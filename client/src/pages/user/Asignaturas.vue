@@ -2,10 +2,10 @@
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
     <div class="row justify-center">
-      <img src="app movil 15.png" style="height: 280px; width: 100%">
+      <img src="app movil 15.png" style="height: 280px;; width: 100%">
     </div>
 
-    <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+    <div class="shadow-up-1 q-py-lg full-width bg-white" style="position:absolute; top:265px; padding-bottom:70px; border-top-left-radius: 20px; border-top-right-radius: 20px">
       <div class="text-grey-8 text-h6 q-pl-md">Desafio individual</div>
       <div class="text-grey-8 text-caption q-pl-md">Escoge la materia que quieres entrenar</div>
       <div class="column items-center q-mt-md">

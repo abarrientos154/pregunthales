@@ -5,7 +5,7 @@
       <img src="app movil 9.png" style="height: 280px; width: 100%">
     </div>
 
-    <div class="shadow-up-1 q-py-lg" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+    <div class="shadow-up-1 q-py-lg full-width bg-white" style="position:absolute; top:265px; padding-bottom:70px; border-top-left-radius: 20px; border-top-right-radius: 20px">
       <div class="text-grey-8 text-h6 text-center">Desafio por puntos</div>
       <div class="text-grey-8 text-caption text-center">Tu amigo te está desafiando</div>
 
