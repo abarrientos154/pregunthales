@@ -12,13 +12,12 @@
       </q-carousel-slide>
 
       <q-carousel-slide :name="2" class="q-pa-none">
+        <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
         <div class="row justify-center">
-          <q-img src="app movil 5.png" style="height: 280px; width: 100%">
-            <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
-          </q-img>
+          <img src="app movil 5.png" style="height: 280px; width: 100%"/>
         </div>
 
-        <div class="shadow-up-1 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+        <div class="shadow-up-1 column items-center full-width bg-white" style="position:relative; top:-15px; border-top-left-radius: 20px; border-top-right-radius: 20px">
           <div class="text-primary text-h6 q-py-md">Registro de usuario</div>
           <div class="column items-center">
             <q-avatar size="150px" class="bg-grey-5">

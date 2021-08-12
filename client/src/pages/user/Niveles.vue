@@ -10,8 +10,12 @@
       <div class="text-grey-8 text-caption q-pl-md">{{course.description}}</div>
       <div v-if="tests.length > 0" class="column items-center q-mt-md">
         <q-card v-for="(item,index) in tests" :key="index" v-ripple class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
-        @click="$router.push('/nivel/' + item._id)">
-          <q-img :src="baseuNivel + item._id" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" />
+        @click="item.enable ? $router.push('/nivel/' + item._id) : ''">
+          <q-img :src="baseuNivel + item._id" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" >
+            <div v-if="!item.enable" class="absolute-full">
+              <q-icon class="absolute-center" size="lg" color="white" name="lock" />
+            </div>
+          </q-img>
           <div class="row q-pa-sm" style="height: 100px">
             <div class="col-6">
               <div class="text-grey-9 text-h6">{{item.title}}</div>

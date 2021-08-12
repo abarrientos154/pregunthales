@@ -29,6 +29,7 @@ class AsignaturaController {
       const user = (await auth.getUser()).toJSON()
       let course = (await Asignatura.query().where('_id', params.id).with('tests').first()).toJSON()
       if (user.roles[0] === 2) {
+        var tieneAnterior = false
         for (let i = 0; i < course.tests.length; i++) {
           var datos = (await Answer.query().where({id: course.tests[i].id, user_id: user._id}).fetch()).toJSON()
           if (datos.length) {
@@ -45,6 +46,19 @@ class AsignaturaController {
           } else {
             course.tests[i].fecha_test = moment(course.tests[i].created_at).format('DD/MM/YYYY')
             course.tests[i].total_point = 0
+          }
+
+          if (i === 0) {
+            course.tests[i].enable = true
+            if (datos.length) {
+              tieneAnterior = true
+            }
+          } else if (datos.length) {
+            course.tests[i].enable = true
+            tieneAnterior = true
+          } else if (tieneAnterior) {
+            course.tests[i].enable = true
+            tieneAnterior = false
           }
         }
       }

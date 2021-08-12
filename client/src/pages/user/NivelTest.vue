@@ -9,7 +9,7 @@
         <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         <div class="absolute-center" style="width:100%">
           <div class="q-pb-sm row justify-center">
-            <img :src="baseuNivel + test._id" style="height: 280px; width: 280px">
+            <img :src="baseuNivel + test._id" style="height: 280px; width: 280px; border-radius: 20px">
           </div>
           <div class="text-center text-h6 text-white">Comenzar <b>{{test.title}}</b></div>
         </div>
@@ -26,7 +26,7 @@
             ref="carousel"
             >
             <q-carousel-slide :name="index + 1" class="q-pa-none" v-for="(pregunta, index) in questions" :key="index">
-                <q-btn class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
+                <q-btn v-if="slide2 != 1" class="absolute-top" round flat color="grey-9" icon="arrow_back" @click="$refs.carousel.previous()" />
                 <div class="absolute-top-right q-pa-md">
                   <div class="text-h6 text-black text-right">Tiempo disponible</div>
                   <q-field outlined dense bg-color="white" stack-label>
@@ -40,7 +40,7 @@
                 <div class="row justify-center">
                     <img :src="baseuPregunta + pregunta._id" style="height: 400px; width: 100%">
                 </div>
-                <div class="shadow-up-1 column items-center justify-center" style="border-top-left-radius: 20px; border-top-right-radius: 20px">
+                <div class="shadow-up-1 column items-center justify-center full-width bg-white" style="position:relative; top:-15px; border-top-left-radius: 20px; border-top-right-radius: 20px">
                     <div class="text-subtitle1 text-grey-9 text-center q-pa-md">{{pregunta.question}}</div>
                     <div class="column justify-around" style="width:100%">
                         <div @click="answerSelected(item, pregunta)" class="q-px-xs q-pb-md" v-for="(item, index2) in pregunta.answers" :key="index2">
@@ -68,7 +68,7 @@
         <div class="column items-center q-py-md">
           <div class="text-center text-h6 text-white">Tu puntuación fue: {{test.total_point}} puntos</div>
           <div class="text-center text-h6 text-white">Preguntas omitidas: {{test.omitidas}}</div>
-          <div v-if="!desafio" class="text-center text-h6 text-white">Puntuación anterior: {{test.anterior ? test.anterior : 'No hay'}} puntos</div>
+          <div v-if="!desafio" class="text-center text-h6 text-white">Puntuación anterior: {{test.anterior !== null ? test.anterior + ' puntos' : 'No hay'}}</div>
           <div class="text-center text-h6 text-white q-pb-md">Tiempo de término: </div>
           <q-btn no-caps color="purple" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         </div>

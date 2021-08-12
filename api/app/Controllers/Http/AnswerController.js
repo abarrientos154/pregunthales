@@ -225,6 +225,8 @@ class AnswerController {
       if (otras.length > 1) {
         var largo = otras.length - 2
         result.anterior = otras[largo].total_point
+      } else {
+        result.anterior = null
       }
       response.send(result)
     } catch (error) {
