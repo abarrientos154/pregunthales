@@ -69,7 +69,7 @@
           <div class="text-center text-h6 text-white">Tu puntuación fue: {{test.total_point}} puntos</div>
           <div class="text-center text-h6 text-white">Preguntas omitidas: {{test.omitidas}}</div>
           <div v-if="!desafio" class="text-center text-h6 text-white">Puntuación anterior: {{test.anterior !== null ? test.anterior + ' puntos' : 'No hay'}}</div>
-          <div class="text-center text-h6 text-white q-pb-md">Tiempo de término: </div>
+          <div class="text-center text-h6 text-white q-pb-md">Tiempo de término: {{timeTest - minutos}}m y {{60 - segundos}}s</div>
           <q-btn no-caps color="purple" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         </div>
       </q-carousel-slide>
