@@ -2,8 +2,10 @@
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
     <div class="absolute-top-right text-white q-pa-sm text-right">
-      <div>Puntaje de hoy</div>
-      <div class="text-h6">{{puntaje}}</div>
+      <div class="text-h6">Puntaje general</div>
+      <div class="text-h5 text-bold">{{puntaje}}</div>
+      <div class="q-pt-sm">Puntaje de hoy</div>
+      <div>{{puntajeHoy}}</div>
     </div>
     <div class="row justify-center">
       <img src="app movil 4.png" style="height: 280px; width: 100%">
@@ -130,6 +132,7 @@ export default {
       baseuNivel: '',
       baseuPerfil: '',
       puntaje: 0,
+      puntajeHoy: 0,
       user: {},
       desafio: {},
       desafiado: [],
@@ -147,6 +150,7 @@ export default {
       await this.$api.get('user_info').then(res => {
         if (res) {
           this.user = res
+          this.puntaje = res.points
           this.getPuntaje()
         }
       })
@@ -170,12 +174,12 @@ export default {
     getPuntaje () {
       this.$api.get('get_puntaje_dia/desafio').then(async res => {
         if (res) {
-          this.puntaje = res
+          this.puntajeHoy = res
         }
       })
     },
     verificar (item) {
-      if (this.puntaje >= 500 && !this.user.membresia) {
+      if (this.puntajeHoy >= 500 && !this.user.membresia) {
         this.$q.dialog({
           title: 'Atención',
           message: 'Haz alcanzado tu capacidad de puntos en desafios por día, debes esperar a mañana para seguir participando en desafios',

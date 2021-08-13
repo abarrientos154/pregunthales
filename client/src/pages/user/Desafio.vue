@@ -2,8 +2,10 @@
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
     <div class="absolute-top-right text-white q-pa-sm text-right">
-      <div>Puntaje de hoy</div>
-      <div class="text-h6">{{puntaje}}</div>
+      <div class="text-h6">Puntaje general</div>
+      <div class="text-h5 text-bold">{{puntaje}}</div>
+      <div class="q-pt-sm">Puntaje de hoy</div>
+      <div>{{puntajeHoy}}</div>
     </div>
     <div class="row justify-center">
       <img src="app movil 2.png" style="height: 280px; width: 100%">
@@ -116,6 +118,7 @@ export default {
       baseuPerfil: '',
       baseuNivel: '',
       puntaje: 0,
+      puntajeHoy: 0,
       user: {},
       courses: [],
       niveles: [],
@@ -140,6 +143,7 @@ export default {
       await this.$api.get('user_info').then(res => {
         if (res) {
           this.user = res
+          this.puntaje = res.points
           this.getPuntaje()
         }
       })
@@ -161,7 +165,7 @@ export default {
     },
     getPuntaje () {
       this.$api.get('get_puntaje_dia/desafio').then(async res => {
-        this.puntaje = res
+        this.puntajeHoy = res
         if (res >= 500 && !this.user.membresia) {
           this.$q.dialog({
             title: 'Atención',
