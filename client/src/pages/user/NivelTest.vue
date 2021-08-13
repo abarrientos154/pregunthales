@@ -100,10 +100,6 @@ export default {
   mounted () {
     this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.baseuPregunta = env.apiUrl + 'pregunta_img/'
-    if (this.$route.params.idDesafio) {
-      this.desafio = true
-      this.idDesafio = this.$route.params.idDesafio
-    }
     this.getTestById()
     this.getUser()
   },
@@ -112,6 +108,26 @@ export default {
       await this.$api.get('user_info').then(res => {
         if (res) {
           this.user = res
+          if (this.$route.params.idDesafio) {
+            this.desafio = true
+            this.idDesafio = this.$route.params.idDesafio
+          } else {
+            this.getPuntaje()
+          }
+        }
+      })
+    },
+    getPuntaje () {
+      this.$api.get('get_puntaje_dia/solo').then(async res => {
+        if (res >= 500 && !this.user.membresia) {
+          this.$q.dialog({
+            title: 'Atención',
+            message: 'Haz alcanzado tu capacidad de puntos entrenando solo por día, podrás seguir entrenando pero no aumentarás tu ranking',
+            cancel: false,
+            persistent: false
+          }).onOk(() => {
+            // ok
+          })
         }
       })
     },

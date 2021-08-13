@@ -89,13 +89,6 @@ addPrefixToGroup(
     Route.get('questById/:id', 'QuestionController.show')
     Route.delete('destroyQuest/:id', 'QuestionController.destroy')
 
-    Route.post('newDateExam', 'DateExamController.store')
-    Route.put('updateDateExam/:id', 'DateExamController.update')
-    Route.get('dateExam', 'DateExamController.index')
-    Route.get('dateExamUser', 'DateExamController.dateExamUser')
-    Route.delete('destroyDateExam/:id', 'DateExamController.destroy')
-    Route.get('dateExamById/:id', 'DateExamController.show')
-
     Route.post('answer', 'AnswerController.store')
     Route.put('answer/:id', 'AnswerController.update')
     Route.get('answerById/:id', 'AnswerController.show')
@@ -107,6 +100,11 @@ addPrefixToGroup(
     Route.get('desafioById/:id', 'AnswerController.showDesafio')
     Route.put('desafio/:id', 'AnswerController.edit')
     Route.put('desafio_value/:id', 'AnswerController.editDesafio')
+
+    Route.get('get_puntaje_dia/:type', 'AnswerController.puntajeDia')
+
+    Route.post('comprar_puntos', 'UserController.comprarPuntos')
+    Route.post('comprar_membresia', 'UserController.comprarMembresia')
 
   }).middleware("auth")
 );

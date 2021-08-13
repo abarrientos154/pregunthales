@@ -1,6 +1,10 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="absolute-top-right text-white q-pa-sm text-right">
+      <div>Puntaje de hoy</div>
+      <div class="text-h6">{{puntaje}}</div>
+    </div>
     <div class="row justify-center">
       <img src="app movil 15.png" style="height: 280px;; width: 100%">
     </div>
@@ -33,12 +37,13 @@
 export default {
   data () {
     return {
-      item: 0,
+      puntaje: 0,
       asig: []
     }
   },
   mounted () {
     this.getAsignaturas()
+    this.getPuntaje()
   },
   methods: {
     async getAsignaturas () {
@@ -49,6 +54,13 @@ export default {
         if (res) {
           this.$q.loading.hide()
           this.asig = res
+        }
+      })
+    },
+    getPuntaje () {
+      this.$api.get('get_puntaje_dia/solo').then(async res => {
+        if (res) {
+          this.puntaje = res
         }
       })
     }

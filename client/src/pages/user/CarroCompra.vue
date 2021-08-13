@@ -8,47 +8,50 @@
     <div class="shadow-up-1 q-py-lg full-width bg-white" style="position:absolute; top: 265px;border-top-left-radius: 20px; border-top-right-radius: 20px">
       <div class="text-grey-8 text-h6 q-pl-md">Mi carro de compra</div>
       <div v-if="puntos" class="text-grey-8 text-caption q-pl-md">Aquí podrás adquirir los puntos que necesites</div>
-      <div v-if="membresia" class="text-grey-8 text-caption q-pl-md">Aquí podrás adquirir las membresias que necesites</div>
+      <div v-if="membresia" class="text-grey-8 text-caption q-pl-md">Obtendrás puntos diarios ilimitados en modos de juego solitario y jugador vs jugador</div>
 
-        <div v-if="puntos" class="row items-start q-px-sm q-mt-md" style="width:100%">
-          <div>
-              <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
-          </div>
-          <div class="col q-pl-md">
-              <div class="text-grey-8 text-h5">Puntos</div>
-              <div class="text-grey-8 text-caption">Selecciona los puntos que desees</div>
-              <div class="row items-center justify-between">
-                  <div class="text-grey-8 text-h6"><b>Costo </b>$20</div>
-                  <div class="row items-center q-pr-sm">
-                      <q-btn round flat dense icon="remove" color="grey-8" @click="editCantidad(false)" />
-                      <q-btn round flat dense icon="add" color="grey-8" @click="editCantidad(true)" />
-                      <div class="text-grey-8 text-h6">{{cantidad}}</div>
-                  </div>
-              </div>
-          </div>
+        <div v-if="puntos">
+          <q-card clickable v-ripple flat class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
+          @click="comprarPuntos(1)">
+            <div>
+                <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
+            </div>
+            <div class="col q-pl-md">
+                <div class="text-grey-8 text-h5">1000 puntos</div>
+                <div class="text-grey-8 text-caption">Selecciona para obtener 1000 puntos</div>
+                <div class="text-grey-8 text-h6"><b>Costo </b>$0,99</div>
+            </div>
+          </q-card>
+          <q-card clickable v-ripple flat class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
+          @click="comprarPuntos(2)">
+            <div>
+                <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
+            </div>
+            <div class="col q-pl-md">
+                <div class="text-grey-8 text-h5">2000 puntos</div>
+                <div class="text-grey-8 text-caption">Selecciona para obtener 2000 puntos</div>
+                <div class="text-grey-8 text-h6"><b>Costo </b>$1,5</div>
+            </div>
+          </q-card>
         </div>
 
-        <div v-if="membresia" class="row items-start q-px-sm q-mt-md" style="width:100%">
+        <q-card flat clickable v-ripple v-if="membresia" class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
+        @click="comprarMembresia()">
           <div>
               <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
           </div>
           <div class="col q-pl-md">
               <div class="text-grey-8 text-h5">Membresia</div>
               <div class="text-grey-8 text-caption">Selecciona los meses que deseas pagar</div>
-              <div class="row items-center justify-between">
-                  <div class="text-grey-8 text-h6"><b>Costo </b>$20</div>
-                  <div class="row items-center q-pr-sm">
-                      <q-btn round flat dense icon="remove" color="grey-8" @click="editCantidad(false)" />
-                      <q-btn round flat dense icon="add" color="grey-8" @click="editCantidad(true)" />
-                      <div class="text-grey-8 text-h6">{{cantidad}}</div>
-                  </div>
-              </div>
+              <div class="text-grey-8 text-h6"><b>Costo </b>$5</div>
           </div>
-        </div>
+        </q-card>
 
-        <div class="row justify-center fixed-bottom" style="padding-bottom: 80px">
-            <q-btn no-caps color="black" label="Pagar" style="width: 90%" @click="compraExitosa = true" />
-        </div>
+      <q-dialog v-model="verFactura">
+        <q-card>
+
+        </q-card>
+      </q-dialog>
 
       <q-dialog v-model="compraExitosa" persistent maximized>
           <q-card style="width:100%;">
@@ -69,8 +72,8 @@ export default {
     return {
       puntos: false,
       membresia: false,
+      verFactura: false,
       compraExitosa: false,
-      cantidad: 1,
       data: []
     }
   },
@@ -82,14 +85,45 @@ export default {
     }
   },
   methods: {
-    editCantidad (bool) {
-      if (bool) {
-        this.cantidad = this.cantidad + 1
-      } else {
-        if (this.cantidad > 1) {
-          this.cantidad = this.cantidad - 1
-        }
-      }
+    comprarPuntos (val) {
+      this.$q.dialog({
+        title: 'Confirma',
+        message: '¿Seguro deseas comprar este paquete de puntos?',
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        this.$q.loading.show({
+          message: 'Adquiriendo puntos...'
+        })
+        await this.$api.post('comprar_puntos', { puntos: val === 1 ? 1000 : 2000, costo: val === 1 ? 0.99 : 1.5 }).then(res => {
+          if (res) {
+            this.$q.loading.hide()
+            this.compraExitosa = true
+          }
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      })
+    },
+    comprarMembresia () {
+      this.$q.dialog({
+        title: 'Confirma',
+        message: '¿Seguro deseas adquirir la membresia?',
+        cancel: true,
+        persistent: true
+      }).onOk(async () => {
+        this.$q.loading.show({
+          message: 'Adquiriendo membresia...'
+        })
+        await this.$api.post('comprar_membresia').then(res => {
+          if (res) {
+            this.$q.loading.hide()
+            this.compraExitosa = true
+          }
+        })
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      })
     }
   }
 }

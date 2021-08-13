@@ -1,6 +1,10 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="absolute-top-right text-white q-pa-sm text-right">
+      <div>Puntaje de hoy</div>
+      <div class="text-h6">{{puntaje}}</div>
+    </div>
     <div class="row justify-center">
       <img src="app movil 8.png" style="height: 280px; width: 100%">
     </div>
@@ -29,7 +33,7 @@
         </q-card>
       </div>
       <q-card v-else class="shadow-2 q-ma-md q-pa-md">
-        <div class="text-center text-subtitle1">Actualmente sin nieveles...</div>
+        <div class="text-center text-subtitle1">Sin nieveles disponibles...</div>
       </q-card>
     </div>
   </div>
@@ -41,7 +45,7 @@ export default {
   data () {
     return {
       baseuNivel: '',
-      item: 0,
+      puntaje: 0,
       form: {},
       course: {},
       tests: []
@@ -50,6 +54,7 @@ export default {
   mounted () {
     this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.getCourse(this.$route.params.id)
+    this.getPuntaje()
   },
   methods: {
     async getCourse (id) {
@@ -61,6 +66,13 @@ export default {
           this.$q.loading.hide()
           this.course = res
           this.tests = this.course.tests
+        }
+      })
+    },
+    getPuntaje () {
+      this.$api.get('get_puntaje_dia/solo').then(async res => {
+        if (res) {
+          this.puntaje = res
         }
       })
     }

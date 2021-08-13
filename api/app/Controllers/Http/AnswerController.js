@@ -2,6 +2,8 @@
 const Answer = use("App/Models/Answer")
 const Desafios = use("App/Models/Desafio")
 const User = use("App/Models/User")
+const Puntajes = use("App/Models/Puntaje")
+const moment = use('moment')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -36,6 +38,17 @@ class AnswerController {
     const user = (await auth.getUser()).toJSON()
     let desafios = (await Desafios.query().where({creador_id: user._id}).with('creadorInfo').with('desafiadoInfo').fetch()).toJSON()
     response.send(desafios)
+  }
+
+  async puntajeDia ({ params, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
+    let puntosHoy = (await Puntajes.query().where({type: params.type, user_id: user._id}).fetch()).toJSON()
+    var filtrados = puntosHoy.filter(v => moment(v.created_at).format('YYYY/MM/DD') === moment().format('YYYY/MM/DD'))
+    var puntos = 0
+    for (let i = 0; i < filtrados.length; i++) {
+      puntos = puntos + filtrados[i].total_point
+    }
+    response.send(puntos)
   }
 
   /**
@@ -149,6 +162,12 @@ class AnswerController {
         status1: 2
       }
       if (id.status2 === 2) {
+        let dataPuntaje = {
+          total_point: id.total_point2 > data.total_point1 ? id.total_point2 : data.total_point1,
+          user_id: id.total_point2 > data.total_point1 ? id.desafiado_id : id.creador_id,
+          type: 'desafio'
+        }
+        let puntaje = await Puntajes.create(dataPuntaje)
         if (id.total_point2 > data.total_point1) {
           data.ganador = 2
           user2.points = user2.points + id.total_point2
@@ -179,6 +198,12 @@ class AnswerController {
         status2: 2
       }
       if (id.status1 === 2) {
+        let dataPuntaje = {
+          total_point: id.total_point1 > data.total_point2 ? id.total_point1 : data.total_point2,
+          user_id: id.total_point1 > data.total_point2 ? id.creador_id : id.desafiado_id,
+          type: 'desafio'
+        }
+        let puntaje = await Puntajes.create(dataPuntaje)
         if (id.total_point1 > data.total_point2) {
           data.ganador = 1
           user1.points = user1.points + id.total_point1
@@ -220,7 +245,25 @@ class AnswerController {
       let answer = request.body
       const update = await Answer.where('_id', params.id).update(answer)
       let result = (await Answer.query().where('_id', params.id).first()).toJSON()
-      const updateUser = await User.where('_id', user._id).update({points: user.points + result.total_point})
+
+      var puntosHoy = (await Puntajes.query().where({type: 'solo', user_id: user._id}).fetch()).toJSON()
+      var filtrados = puntosHoy.filter(v => moment(v.created_at).format('YYYY/MM/DD') === moment().format('YYYY/MM/DD'))
+      var puntos = 0
+      for (let i = 0; i < filtrados.length; i++) {
+        puntos = puntos + filtrados[i].total_point
+      }
+      if (puntos >= 500 && !user.membresia) {
+        // no agrega puntos
+      } else {
+        let dataPuntaje = {
+          total_point: answer.total_point,
+          user_id: user._id,
+          type: 'solo'
+        }
+        let puntaje = await Puntajes.create(dataPuntaje)
+        const updateUser = await User.where('_id', user._id).update({points: user.points + result.total_point})
+      }
+
       var otras = (await Answer.query().where({id: result.id, user_id: user._id}).fetch()).toJSON()
       if (otras.length > 1) {
         var largo = otras.length - 2

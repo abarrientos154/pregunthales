@@ -1,6 +1,10 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="absolute-top-right text-white q-pa-sm text-right">
+      <div>Puntaje de hoy</div>
+      <div class="text-h6">{{puntaje}}</div>
+    </div>
     <div class="row justify-center">
       <img src="app movil 2.png" style="height: 280px; width: 100%">
     </div>
@@ -111,6 +115,7 @@ export default {
       nivelSelec: null,
       baseuPerfil: '',
       baseuNivel: '',
+      puntaje: 0,
       user: {},
       courses: [],
       niveles: [],
@@ -135,6 +140,7 @@ export default {
       await this.$api.get('user_info').then(res => {
         if (res) {
           this.user = res
+          this.getPuntaje()
         }
       })
     },
@@ -150,6 +156,21 @@ export default {
       await this.$api.get('course').then(res => {
         if (res) {
           this.courses = res
+        }
+      })
+    },
+    getPuntaje () {
+      this.$api.get('get_puntaje_dia/desafio').then(async res => {
+        this.puntaje = res
+        if (res >= 500 && !this.user.membresia) {
+          this.$q.dialog({
+            title: 'Atención',
+            message: 'Haz alcanzado tu capacidad de puntos en desafios por día, debes esperar a mañana para seguir desafiando',
+            cancel: false,
+            persistent: true
+          }).onOk(() => {
+            this.$router.go(-1)
+          })
         }
       })
     },

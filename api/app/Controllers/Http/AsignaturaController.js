@@ -29,6 +29,9 @@ class AsignaturaController {
       const user = (await auth.getUser()).toJSON()
       let course = (await Asignatura.query().where('_id', params.id).with('tests').first()).toJSON()
       if (user.roles[0] === 2) {
+        if (!user.membresia) {
+          course.tests = course.tests.filter(v => v.type)
+        }
         var tieneAnterior = false
         for (let i = 0; i < course.tests.length; i++) {
           var datos = (await Answer.query().where({id: course.tests[i].id, user_id: user._id}).fetch()).toJSON()

@@ -1,6 +1,10 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
+    <div class="absolute-top-right text-white q-pa-sm text-right">
+      <div>Puntaje de hoy</div>
+      <div class="text-h6">{{puntaje}}</div>
+    </div>
     <div class="row justify-center">
       <img src="app movil 9.png" style="height: 280px; width: 100%">
     </div>
@@ -40,6 +44,7 @@ export default {
       respuesta: '',
       baseuPerfil: '',
       baseuNivel: '',
+      puntaje: 0,
       desafio: {}
     }
   },
@@ -50,12 +55,35 @@ export default {
     this.baseuPerfil = env.apiUrl + 'perfil_img/'
     this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.getDesafio()
+    this.getUser()
   },
   methods: {
+    async getUser () {
+      await this.$api.get('user_info').then(res => {
+        if (res) {
+          this.getPuntaje(res.membresia)
+        }
+      })
+    },
     async getDesafio () {
       await this.$api.get('desafioById/' + this.$route.params.id).then(res => {
         if (res) {
           this.desafio = res
+        }
+      })
+    },
+    getPuntaje (bool) {
+      this.$api.get('get_puntaje_dia/desafio').then(async res => {
+        this.puntaje = res
+        if (res >= 500 && !bool) {
+          this.$q.dialog({
+            title: 'Atención',
+            message: 'Haz alcanzado tu capacidad de puntos en desafios por día, debes esperar a mañana para aceptar desafios',
+            cancel: false,
+            persistent: true
+          }).onOk(() => {
+            this.$router.push('/desafios')
+          })
         }
       })
     },
