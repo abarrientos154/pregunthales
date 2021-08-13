@@ -94,14 +94,26 @@
             </div>
           </q-card>
       </q-dialog>
+
+      <q-dialog v-model="paypalPuntos" @hide="reload">
+        <paypal :total="puntosSelec === 1 ? 1000 : 2000" :descripcion="'Puntos'" />
+      </q-dialog>
+
+      <q-dialog v-model="paypalMembresia" @hide="reload">
+        <paypal :total="5" :descripcion="'Membresia'" />
+      </q-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import Paypal from '../../components/Paypal.vue'
 export default {
+  components: { Paypal },
   data () {
     return {
+      paypalPuntos: false,
+      paypalMembresia: false,
       puntos: false,
       membresia: false,
       verFacturaMembresia: false,
