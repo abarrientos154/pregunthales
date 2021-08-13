@@ -12,7 +12,7 @@
 
         <div v-if="puntos">
           <q-card clickable v-ripple flat class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
-          @click="comprarPuntos(1)">
+          @click="puntosSelec = 1, verFacturaPuntos = true">
             <div>
                 <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
             </div>
@@ -23,7 +23,7 @@
             </div>
           </q-card>
           <q-card clickable v-ripple flat class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
-          @click="comprarPuntos(2)">
+          @click="puntosSelec = 2, verFacturaPuntos = true">
             <div>
                 <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
             </div>
@@ -36,20 +36,52 @@
         </div>
 
         <q-card flat clickable v-ripple v-if="membresia" class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
-        @click="comprarMembresia()">
+        @click="user.membresia ? verDialog() : verFacturaMembresia = true">
           <div>
               <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
           </div>
           <div class="col q-pl-md">
               <div class="text-grey-8 text-h5">Membresia</div>
-              <div class="text-grey-8 text-caption">Selecciona los meses que deseas pagar</div>
+              <div class="text-grey-8 text-caption">Podrás entrenar y desafiar cuanto quieras</div>
               <div class="text-grey-8 text-h6"><b>Costo </b>$5</div>
           </div>
         </q-card>
 
-      <q-dialog v-model="verFactura">
-        <q-card>
+      <q-dialog v-model="verFacturaPuntos">
+        <q-card class="q-pa-md" style="width:100%">
+          <div class="text-h6">Paquete de puntos</div>
+          <div class="row items-start q-mt-md q-py-md">
+            <div>
+                <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
+            </div>
+            <div class="col q-pl-md">
+                <div class="text-grey-8 text-h5">{{puntosSelec === 1 ? 1000 : 2000}} puntos</div>
+                <div class="text-grey-8 text-caption">Obtendras {{puntosSelec === 1 ? 1000 : 2000}} puntos en tu ranking</div>
+                <div class="text-grey-8 text-h6"><b>Costo </b>${{puntosSelec === 1 ? 0.99 : 1.5}}</div>
+            </div>
+          </div>
+          <div class="row justify-center q-pt-xl">
+            <q-btn no-caps color="black" label="Pagar" style="width:80%" @click="comprarPuntos(puntosSelec)" />
+          </div>
+        </q-card>
+      </q-dialog>
 
+      <q-dialog v-model="verFacturaMembresia">
+        <q-card class="q-pa-md" style="width:100%">
+          <div class="text-h6">Adquirir membresia</div>
+          <div class="row items-start q-mt-md q-py-md">
+            <div>
+                <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
+            </div>
+            <div class="col q-pl-md">
+                <div class="text-grey-8 text-h5">Membresia</div>
+                <div class="text-grey-8 text-caption">Podrás entrenar y desafiar cuanto quieras</div>
+                <div class="text-grey-8 text-h6"><b>Costo </b>$5</div>
+            </div>
+          </div>
+          <div class="row justify-center q-pt-xl">
+            <q-btn no-caps color="black" label="Pagar" style="width:80%" @click="comprarMembresia()" />
+          </div>
         </q-card>
       </q-dialog>
 
@@ -72,8 +104,11 @@ export default {
     return {
       puntos: false,
       membresia: false,
-      verFactura: false,
+      verFacturaMembresia: false,
+      verFacturaPuntos: false,
       compraExitosa: false,
+      puntosSelec: 0,
+      user: {},
       data: []
     }
   },
@@ -83,46 +118,47 @@ export default {
     } else {
       this.membresia = true
     }
+    this.getUser()
   },
   methods: {
-    comprarPuntos (val) {
-      this.$q.dialog({
-        title: 'Confirma',
-        message: '¿Seguro deseas comprar este paquete de puntos?',
-        cancel: true,
-        persistent: true
-      }).onOk(async () => {
-        this.$q.loading.show({
-          message: 'Adquiriendo puntos...'
-        })
-        await this.$api.post('comprar_puntos', { puntos: val === 1 ? 1000 : 2000, costo: val === 1 ? 0.99 : 1.5 }).then(res => {
-          if (res) {
-            this.$q.loading.hide()
-            this.compraExitosa = true
-          }
-        })
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
+    async getUser () {
+      await this.$api.get('user_info').then(res => {
+        if (res) {
+          this.user = res
+        }
       })
     },
-    comprarMembresia () {
+    async comprarPuntos (val) {
+      this.$q.loading.show({
+        message: 'Adquiriendo puntos...'
+      })
+      await this.$api.post('comprar_puntos', { puntos: val === 1 ? 1000 : 2000, costo: val === 1 ? 0.99 : 1.5 }).then(res => {
+        if (res) {
+          this.$q.loading.hide()
+          this.compraExitosa = true
+        }
+      })
+    },
+    async comprarMembresia () {
+      this.$q.loading.show({
+        message: 'Adquiriendo membresia...'
+      })
+      await this.$api.post('comprar_membresia').then(res => {
+        if (res) {
+          this.$q.loading.hide()
+          this.compraExitosa = true
+          this.verFacturaMembresia = false
+        }
+      })
+    },
+    verDialog () {
       this.$q.dialog({
-        title: 'Confirma',
-        message: '¿Seguro deseas adquirir la membresia?',
-        cancel: true,
-        persistent: true
-      }).onOk(async () => {
-        this.$q.loading.show({
-          message: 'Adquiriendo membresia...'
-        })
-        await this.$api.post('comprar_membresia').then(res => {
-          if (res) {
-            this.$q.loading.hide()
-            this.compraExitosa = true
-          }
-        })
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
+        title: 'Atención',
+        message: 'Ya posees tu membresia, no es necesario que adquieras otra',
+        cancel: false,
+        persistent: false
+      }).onOk(() => {
+        this.$router.go(-1)
       })
     }
   }
