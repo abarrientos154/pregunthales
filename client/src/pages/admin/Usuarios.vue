@@ -10,6 +10,7 @@
           <div class="q-pa-sm">
             <div class="text-h6">{{item.name}}</div>
             <div class="text-caption">{{item.email}}</div>
+            <div class="text-caption">Membresia: {{item.membresia ? 'Si' : 'No'}}</div>
             <div class="text-caption">Puntuación: {{item.points}}</div>
           </div>
         </div>
