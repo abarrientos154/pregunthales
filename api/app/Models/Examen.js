@@ -4,7 +4,7 @@
 const Model = use('Model')
 
 class Examen extends Model {
-  static get objectIDs () { return [ 'exam_id' ] }
+  static get objectIDs () { return [ 'exam_id', '_id' ] }
 
   static get fillable() {
     return ['name']

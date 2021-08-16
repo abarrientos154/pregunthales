@@ -95,7 +95,7 @@ class ExamenController {
 
   async getExamWithQuest ({ request, response, params }) {
     console.log('id', params.id)
-    let examenes = (await Examen.query().where('_id', params.id).first()).toJSON()
+    let examenes = (await Examen.query().where('_id', params.id).with('questions').first()).toJSON()
     console.log('examen', examenes)
     response.send(examenes)
   }
