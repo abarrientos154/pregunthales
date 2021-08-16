@@ -181,11 +181,11 @@ export default {
     async desafiar () {
       this.$v.$touch()
       if (!this.$v.userSelec.$error && !this.$v.courseSelec.$error && !this.$v.nivelSelec.$error) {
+        this.$q.loading.show({
+          message: 'Enviando desafio...'
+        })
         await this.$api.get('testById/' + this.nivelSelec._id).then(async v => {
           if (v) {
-            this.$q.loading.show({
-              message: 'Enviando desafio...'
-            })
             const desafio = {
               title: this.nivelSelec.title,
               total_questions: v.questions.length,

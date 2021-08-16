@@ -38,6 +38,7 @@ addPrefixToGroup(
     Route.get('perfil_img/:file', 'UploadController.getFileByDirectoryPerfil')
     Route.get('nivel_img/:file', 'UploadController.getFileByDirectoryNiveles')
     Route.get('pregunta_img/:file', 'UploadController.getFileByDirectoryPreguntas')
+    Route.get('examen_img/:file', 'UploadController.getFileByDirectoryExamenes')
 
   })
 );
@@ -54,7 +55,6 @@ addPrefixToGroup(
     Route.get('getCourseWithTest/:id', 'AsignaturaController.getCourseWithTest')
     Route.put('updateAsignatura/:id', 'AsignaturaController.update')
 
-    Route.get('tema', 'TemaController.index')
     Route.get('test_by_course/:id', 'NivelesController.testByCourse')
     Route.get('testbByCourse/:id', 'NivelesController.testByCourseId')
     Route.get('testById/:id', 'NivelesController.testById')
@@ -66,15 +66,10 @@ addPrefixToGroup(
     Route.get('examen', 'ExamenController.index')
     Route.get('ExamById/:id', 'ExamenController.examById')
     Route.post('examen', 'ExamenController.store')
-    Route.get('getExamWithTest/:id', 'ExamenController.getExamWithTest')
+    Route.post('examen_questions', 'ExamenController.examenQuestions')
+    Route.get('getExamWithQuest/:id', 'ExamenController.getExamWithQuest')
     Route.put('examen/:id', 'ExamenController.update')
     Route.delete('examen/:id', 'ExamenController.destroy')
-
-    Route.get('titles', 'TitleController.index')
-
-    Route.get('communities', 'CommunityController.index')
-
-    Route.get('placesByCommunityId/:id', 'PlaceController.show')
 
     Route.post('uploadExcel', 'UploadController.excel')
     Route.post('bigData', 'UploadController.bigData')

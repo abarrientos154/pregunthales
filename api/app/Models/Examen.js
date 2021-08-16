@@ -4,6 +4,8 @@
 const Model = use('Model')
 
 class Examen extends Model {
+  static get objectIDs () { return [ 'exam_id' ] }
+
   static get fillable() {
     return ['name']
   }
@@ -13,8 +15,8 @@ class Examen extends Model {
     }
     return rules
   }
-  tests () {
-    return this.hasMany('App/Models/Nivele', '_id', 'family_id')
+  questions () {
+    return this.hasMany('App/Models/ExamenQuestion', '_id', 'exam_id')
   }
 }
 

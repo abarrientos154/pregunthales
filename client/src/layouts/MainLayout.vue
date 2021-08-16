@@ -65,7 +65,12 @@ export default {
           ruta: '/administrador'
         },
         {
-          icon: 'person',
+          icon: 'grading',
+          label: 'Examenes',
+          ruta: '/examenes'
+        },
+        {
+          icon: 'groups',
           label: 'Usuarios',
           ruta: '/usuarios'
         },

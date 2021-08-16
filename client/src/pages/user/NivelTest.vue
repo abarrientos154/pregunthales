@@ -137,10 +137,11 @@ export default {
       })
       await this.$api.get('testById/' + this.$route.params.id).then(res => {
         if (res) {
-          this.$q.loading.hide()
           this.test = res
           this.timeTest = res.time
-          this.questions = this.test.questions
+          const questEjem = this.test.questions.sort(() => Math.random() - 0.5)
+          this.questions = questEjem.slice(0, 2)
+          this.$q.loading.hide()
         } else {
           this.$q.loading.hide()
           this.$q.notify({
@@ -185,11 +186,11 @@ export default {
         }).onOk(async () => {
           const answer = {
             title: this.test.title,
-            total_questions: this.test.questions.length,
+            total_questions: this.questions.length,
             family_id: this.test.family_id,
             id: this.test.id,
             user_id: this.user._id,
-            questions: this.test.questions.map(v => {
+            questions: this.questions.map(v => {
               return {
                 ...v,
                 selected: false
@@ -277,7 +278,7 @@ export default {
           num2 = num2 + 1
         }
       }
-      num3 = (num * this.test.point) / this.test.questions.length
+      num3 = (num * this.test.point) / this.questions.length
       const answer = {
         total_point: Math.floor(num3),
         correctas: num,

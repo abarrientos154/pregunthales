@@ -61,7 +61,8 @@
             </div>
           </div>
           <div class="row justify-center q-pt-xl">
-            <q-btn no-caps color="black" label="Pagar" style="width:80%" @click="comprarPuntos(puntosSelec)" />
+            <q-btn no-caps color="black" label="Pagar" style="width:80%"
+            @click="comprarPuntos(puntosSelec)" />
           </div>
         </q-card>
       </q-dialog>
@@ -80,8 +81,21 @@
             </div>
           </div>
           <div class="row justify-center q-pt-xl">
-            <q-btn no-caps color="black" label="Pagar" style="width:80%" @click="comprarMembresia()" />
+            <q-btn no-caps color="black" label="Pagar" style="width:80%"
+            @click="verFacturaMembresia = false, paypalMembresia = true" />
           </div>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="paypalPuntos" persistent maximized>
+        <q-card style="width:100%">
+          <paypal :total="puntosSelec === 1 ? 1000 : 2000" :descripcion="'Puntos'" />
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="paypalMembresia" persistent maximized>
+        <q-card style="width:100%; height: 100%">
+          <paypal :total="5" :descripcion="'Membresia'" />
         </q-card>
       </q-dialog>
 
@@ -93,14 +107,6 @@
                 <q-btn no-caps color="black" label="Volver" style="width: 90%" @click="$router.go(-1)" />
             </div>
           </q-card>
-      </q-dialog>
-
-      <q-dialog v-model="paypalPuntos" @hide="reload">
-        <paypal :total="puntosSelec === 1 ? 1000 : 2000" :descripcion="'Puntos'" />
-      </q-dialog>
-
-      <q-dialog v-model="paypalMembresia" @hide="reload">
-        <paypal :total="5" :descripcion="'Membresia'" />
       </q-dialog>
     </div>
   </div>

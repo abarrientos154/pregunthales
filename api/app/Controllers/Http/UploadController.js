@@ -246,6 +246,11 @@ class UploadController {
     const dir = params.file
     response.download(Helpers.appRoot('storage/uploads/preguntas') + `/${dir}`)
   }
+
+  async getFileByDirectoryExamenes ({ params, response }) {
+    const dir = params.file
+    response.download(Helpers.appRoot('storage/uploads/examenes') + `/${dir}`)
+  }
 }
 
 module.exports = UploadController
