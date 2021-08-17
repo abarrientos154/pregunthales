@@ -1,7 +1,9 @@
 'use strict'
 const Examen = use("App/Models/Examen")
-const QuesNivel = use("App/Models/Question")
+const Question = use("App/Models/Question")
 const QuesExamen = use("App/Models/ExamenQuestion")
+const Asignatura = use("App/Models/Asignatura")
+const Nivele = use("App/Models/Nivele")
 const Helpers = use('Helpers')
 const mkdirp = use('mkdirp')
 // const fs = require('fs')
@@ -35,15 +37,18 @@ class ExamenController {
 
   async examenQuestions ({ request, response, view, params }) {
     let datos = request.all()
-    var questionN = (await QuesNivel.query().where({test_id: datos.nivel_id}).fetch()).toJSON()
-    var nuevas = questionN.sort(() => Math.random() - 0.5)
-    var agregar = nuevas.slice(0, datos.cantidad)
-    for (let i = 0; i < agregar.length; i++) {
-      agregar[i].exam_id = data.exam_id
-      delete agregar[i]._id
-      let guardar = await QuesExamen.create(agregar[i])
+    let examen = (await Examen.find(datos.exam_id))
+    let guardar = await QuesExamen.create(datos)
+    var questions = (await QuesExamen.query().where({exam_id: datos.exam_id}).fetch()).toJSON()
+    var cantidad = 0
+    for (let i = 0; i < questions.length; i++) {
+      cantidad = cantidad + questions[i].cantidad
     }
-    response.send(agregar)
+    if (cantidad === examen.cantidad) {
+      examen.enable = true
+      examen.save()
+    }
+    response.send(guardar)
   }
 
   async store ({ request, response, auth }) {
@@ -87,16 +92,41 @@ class ExamenController {
     response.send(modificar)
   }
 
+  async updateQuestions ({ params, request, response }) {
+    var data = request.all()
+    let modificar = await QuesExamen.query().where('_id', params.id).update(data)
+    response.send(modificar)
+  }
+
   async destroy ({ params, request, response }) {
     let examen = await Examen.find(params.id)
     await examen.delete()
     response.send(examen)
   }
 
+  async destroyQuestions ({ params, request, response }) {
+    let examen = await QuesExamen.find(params.id)
+    await examen.delete()
+    response.send(examen)
+  }
+
   async getExamWithQuest ({ request, response, params }) {
-    console.log('id', params.id)
     let examenes = (await Examen.query().where('_id', params.id).with('questions').first()).toJSON()
-    console.log('examen', examenes)
+    let cantidad = 0
+    for (let i = 0; i < examenes.questions.length; i++) {
+      cantidad = cantidad + examenes.questions[i].cantidad
+      let course = (await Asignatura.query().where('_id', examenes.questions[i].course_id).with('tests').first()).toJSON()
+      let nivel = (await Nivele.query().where('id', examenes.questions[i].nivel_id).first()).toJSON()
+      let preguntasNivel = (await Question.query().where({test_id: nivel.id}).fetch()).toJSON()
+      nivel.total_question = preguntasNivel.length
+      for (let j = 0; j < course.tests.length; j++) {
+        let preguntasCourse = (await Question.query().where({test_id: course.tests[j].id}).fetch()).toJSON()
+        course.tests[j].total_question = preguntasCourse.length
+      }
+      examenes.questions[i].course = course
+      examenes.questions[i].nivel = nivel
+    }
+    examenes.faltantes = examenes.cantidad - cantidad
     response.send(examenes)
   }
 }

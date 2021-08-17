@@ -69,7 +69,9 @@ addPrefixToGroup(
     Route.post('examen_questions', 'ExamenController.examenQuestions')
     Route.get('getExamWithQuest/:id', 'ExamenController.getExamWithQuest')
     Route.put('examen/:id', 'ExamenController.update')
+    Route.put('examen_questions/:id', 'ExamenController.updateQuestions')
     Route.delete('examen/:id', 'ExamenController.destroy')
+    Route.delete('examen_questions/:id', 'ExamenController.destroyQuestions')
 
     Route.post('uploadExcel', 'UploadController.excel')
     Route.post('bigData', 'UploadController.bigData')

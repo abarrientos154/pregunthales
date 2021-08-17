@@ -2,15 +2,16 @@
   <div class="q-pa-md column items-center">
     <div class="text-primary text-h5 q-pb-md">Examenes</div>
     <div class="column items-center" style="width: 100%" v-if="examenes.length">
-      <q-card v-for="(item,index) in examenes" clickable v-ripple :key="index" class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
+      <q-card v-for="(item,index) in examenes" clickable v-ripple :key="index" class="q-pa-none q-mb-md" style="width: 98%; height: 180px; border-radius: 15px; min-width: 300px; max-width: 500px">
         <div class="row">
           <div class="col-6 q-pa-sm">
             <div class="text-subtitle1 text-bold">{{item.title}}</div>
             <div>Preguntas: <b>{{item.cantidad}}</b></div>
             <div>Puntuación: <b>{{item.point}}</b></div>
+            <div>Estado: <b>{{item.enable ? 'Completo' : 'En proceso'}}</b></div>
           </div>
           <div class="col-6 q-pa-none">
-            <q-img :src="baseuExamen + item._id" style="height: 150px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
+            <q-img :src="baseuExamen + item._id" style="height: 180px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
           </div>
           <div class="absolute-bottom row q-pa-md">
               <q-btn flat dense round class="q-mx-sm" color="primary" icon="edit" @click="editExam(item)"/>
