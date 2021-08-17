@@ -37,17 +37,8 @@ class ExamenController {
 
   async examenQuestions ({ request, response, view, params }) {
     let datos = request.all()
-    let examen = (await Examen.find(datos.exam_id))
     let guardar = await QuesExamen.create(datos)
-    var questions = (await QuesExamen.query().where({exam_id: datos.exam_id}).fetch()).toJSON()
-    var cantidad = 0
-    for (let i = 0; i < questions.length; i++) {
-      cantidad = cantidad + questions[i].cantidad
-    }
-    if (cantidad === examen.cantidad) {
-      examen.enable = true
-      examen.save()
-    }
+
     response.send(guardar)
   }
 
@@ -100,6 +91,11 @@ class ExamenController {
 
   async destroy ({ params, request, response }) {
     let examen = await Examen.find(params.id)
+    let preguntas = (await QuesExamen.query().where({exam_id: params.id}).fetch()).toJSON()
+    for (let i = 0; i < preguntas.length; i++) {
+      let eliminar = await QuesExamen.find(preguntas[i]._id)
+      await eliminar.delete()
+    }
     await examen.delete()
     response.send(examen)
   }
@@ -127,6 +123,16 @@ class ExamenController {
       examenes.questions[i].nivel = nivel
     }
     examenes.faltantes = examenes.cantidad - cantidad
+  
+    let examenUpdate = (await Examen.find(params.id))
+    if (examenes.faltantes > 0) {
+      examenUpdate.enable = false
+      examenUpdate.save()
+    } else {
+      examenUpdate.enable = true
+      examenUpdate.save()
+    }
+
     response.send(examenes)
   }
 }
