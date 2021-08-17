@@ -25,8 +25,12 @@ class ExamenController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response, auth }) {
+    const user = (await auth.getUser()).toJSON()
     let datos = await Examen.all()
+    if (user.roles[0] === 2) {
+      datos = (await Examen.query().where({enable: true}).fetch()).toJSON()
+    }
     response.send(datos)
   }
 

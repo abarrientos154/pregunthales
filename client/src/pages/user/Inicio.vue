@@ -56,6 +56,12 @@ export default {
           title: 'Reta a un amigo',
           description: 'Compite contra un amigo y pon a prueba tu entrenamiento',
           ruta: '/desafio'
+        },
+        {
+          img: 'app movil 7.png',
+          title: 'Examenes',
+          description: 'Prueba tu entrenamiento en las diferentes materias',
+          ruta: '/examenes'
         }
       ]
     }
