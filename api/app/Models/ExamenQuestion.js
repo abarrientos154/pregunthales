@@ -4,6 +4,7 @@
 const Model = use('Model')
 
 class ExamenQuestion extends Model {
+  static get objectIDs () { return [ 'exam_id', '_id' ] }
 }
 
 module.exports = ExamenQuestion

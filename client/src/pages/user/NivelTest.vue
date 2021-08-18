@@ -14,7 +14,7 @@
           <div class="text-center text-h6 text-white">Comenzar <b>{{test.title}}</b></div>
         </div>
         <div class="absolute-bottom row justify-center q-py-md">
-          <q-btn no-caps color="purple" label="Comenzar" size="lg" style="width: 90%" @click="!desafio ? start() : startDesafio()" />
+          <q-btn no-caps color="purple" label="Comenzar" size="lg" style="width: 90%" @click="desafio ? startDesafio() : examen ? startExamen() : start()" />
         </div>
       </q-carousel-slide>
 
@@ -84,10 +84,12 @@ export default {
       user: null,
       answerId: null,
       desafio: false,
+      examen: false,
       timeCounter: null,
       baseuNivel: '',
       baseuPregunta: '',
       idDesafio: '',
+      idExamen: '',
       timeTest: 0,
       slide: 1,
       slide2: 1,
@@ -100,7 +102,12 @@ export default {
   mounted () {
     this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.baseuPregunta = env.apiUrl + 'pregunta_img/'
-    this.getTestById()
+    if (this.$route.params.idExamen) {
+      this.baseuNivel = env.apiUrl + 'examen_img/'
+      this.getExamById()
+    } else {
+      this.getTestById()
+    }
     this.getUser()
   },
   methods: {
@@ -111,6 +118,10 @@ export default {
           if (this.$route.params.idDesafio) {
             this.desafio = true
             this.idDesafio = this.$route.params.idDesafio
+          } else if (this.$route.params.idExamen) {
+            this.examen = true
+            this.idExamen = this.$route.params.idExamen
+            this.getPuntaje()
           } else {
             this.getPuntaje()
           }
@@ -118,11 +129,11 @@ export default {
       })
     },
     getPuntaje () {
-      this.$api.get('get_puntaje_dia/solo').then(async res => {
+      this.$api.get('get_puntaje_dia/' + this.examen ? 'examen' : 'solo').then(async res => {
         if (res >= 500 && !this.user.membresia) {
           this.$q.dialog({
             title: 'Atención',
-            message: 'Haz alcanzado tu capacidad de puntos entrenando solo por día, podrás seguir entrenando pero no aumentarás tu ranking',
+            message: 'Haz alcanzado tu capacidad de puntos entrenando' + this.examen ? ' con examenes ' : ' solo ' + 'por día, podrás seguir entrenando pero no aumentarás tu ranking',
             cancel: false,
             persistent: false
           }).onOk(() => {
@@ -140,7 +151,26 @@ export default {
           this.test = res
           this.timeTest = res.time
           const questEjem = this.test.questions.sort(() => Math.random() - 0.5)
-          this.questions = questEjem.slice(0, 2)
+          this.questions = questEjem.slice(0, 10)
+          this.$q.loading.hide()
+        } else {
+          this.$q.loading.hide()
+          this.$q.notify({
+            color: 'negative',
+            message: 'Aun no hay datos'
+          })
+        }
+      })
+    },
+    async getExamById () {
+      this.$q.loading.show({
+        message: 'Cargando Datos...'
+      })
+      await this.$api.get('getExamWithQuestById/' + this.$route.params.idExamen).then(res => {
+        if (res) {
+          this.test = res
+          this.timeTest = res.time
+          this.questions = this.test.questions.sort(() => Math.random() - 0.5)
           this.$q.loading.hide()
         } else {
           this.$q.loading.hide()
@@ -242,6 +272,47 @@ export default {
         })
       }
     },
+    async startExamen () {
+      if (this.questions.length) {
+        this.$q.dialog({
+          title: 'Confirma',
+          message: '¿Seguro deseas iniciar el test? Tienes ' + this.test.time + ' minutos para resolverlo',
+          cancel: true,
+          persistent: true
+        }).onOk(async () => {
+          const answer = {
+            title: this.test.title,
+            total_questions: this.questions.length,
+            exam_id: this.test._id,
+            user_id: this.user._id,
+            questions: this.questions.map(v => {
+              return {
+                ...v,
+                selected: false
+              }
+            })
+          }
+          await this.$api.post('examen_user', answer).then(res => {
+            if (res) {
+              this.answerId = res._id
+              this.slide = 2
+              this.valueTiempo()
+            }
+          })
+        }).onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+      } else {
+        this.$q.dialog({
+          title: 'Atención',
+          message: 'Aún no hay preguntas para este examen',
+          cancel: false,
+          persistent: true
+        }).onOk(() => {
+          this.$router.go(-1)
+        })
+      }
+    },
     answerSelected (answer, question) {
       for (let i = 0; i < question.answers.length; i++) {
         question.answers[i].isActive = false
@@ -284,9 +355,17 @@ export default {
         correctas: num,
         omitidas: num2
       }
-      if (!this.desafio) {
+      if (this.desafio) {
+        await this.$api.put('desafio_value/' + this.idDesafio, answer).then(res => {
+          if (res) {
+            this.test = answer
+            this.$q.loading.hide()
+            this.slide = 3
+          }
+        })
+      } else if (this.examen) {
         answer.questions = this.questions
-        await this.$api.put('answer/' + this.answerId, answer).then(res => {
+        await this.$api.put('examen_user/' + this.answerId, answer).then(res => {
           if (res) {
             this.test = res
             this.$q.loading.hide()
@@ -294,9 +373,10 @@ export default {
           }
         })
       } else {
-        await this.$api.put('desafio_value/' + this.idDesafio, answer).then(res => {
+        answer.questions = this.questions
+        await this.$api.put('answer/' + this.answerId, answer).then(res => {
           if (res) {
-            this.test = answer
+            this.test = res
             this.$q.loading.hide()
             this.slide = 3
           }

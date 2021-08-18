@@ -2,6 +2,7 @@
 
 const Asignatura = use("App/Models/Asignatura")
 const Answer = use("App/Models/Answer")
+const Question = use("App/Models/Question")
 // const { validate } = use("Validator")
 // const Helpers = use('Helpers')
 // const mkdirp = use('mkdirp')
@@ -17,6 +18,12 @@ const User = use("App/Models/User")
 class AsignaturaController {
   async index ({ request, response, view }) {
     let datos = (await Asignatura.query().where({}).with('tests').fetch()).toJSON()
+    for (let i = 0; i < datos.length; i++) {
+      for (let j = 0; j < datos[i].tests.length; j++) {
+        let preguntas = (await Question.query().where({test_id: datos[i].tests[j].id}).fetch()).toJSON()
+        datos[i].tests[j].total_question = preguntas.length
+      }
+    }
     response.send(datos)
   }
 
@@ -39,7 +46,7 @@ class AsignaturaController {
             var mayor = 0
             var fecha = ''
             for (let j = 0; j < datos.length; j++) {
-              if (datos[j].total_point > mayor) {
+              if (datos[j].total_point >= mayor) {
                 mayor = datos[j].total_point
                 fecha = moment(datos[j].created_at).format('DD/MM/YYYY')
               }

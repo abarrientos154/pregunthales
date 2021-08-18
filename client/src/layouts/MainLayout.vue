@@ -67,7 +67,7 @@ export default {
         {
           icon: 'grading',
           label: 'Examenes',
-          ruta: '/examenes'
+          ruta: '/administrador/examenes'
         },
         {
           icon: 'groups',
