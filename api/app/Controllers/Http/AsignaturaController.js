@@ -46,7 +46,7 @@ class AsignaturaController {
             var mayor = 0
             var fecha = ''
             for (let j = 0; j < datos.length; j++) {
-              if (datos[j].total_point > mayor) {
+              if (datos[j].total_point >= mayor) {
                 mayor = datos[j].total_point
                 fecha = moment(datos[j].created_at).format('DD/MM/YYYY')
               }

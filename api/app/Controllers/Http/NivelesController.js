@@ -167,19 +167,6 @@ class NivelesController {
       console.error(error.name + '1: ' + error.message)
     }
   }
-  async testExamById ({ request, response, params }) {
-    try {
-      let test = (await Nivele.with('exam').with('questions').find(params.id)).toJSON()
-      if (test.hasExamId) {
-        const questionsFromExam = (await Question.query().where({ exam_id: test.id }).fetch()).toJSON()
-        const questions = [...test.questions]
-        test.questions = [...questions, ...questionsFromExam]
-      }
-      response.send(test)
-    } catch (error) {
-      console.error(error.name + '1: ' + error.message)
-    }
-  }
 }
 
 module.exports = NivelesController

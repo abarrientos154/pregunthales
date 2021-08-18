@@ -15,18 +15,19 @@
       <div class="text-grey-8 text-h6 q-pl-md">Examenes</div>
       <div class="text-grey-8 text-caption q-pl-md">Escoge el examen que deseas realizar</div>
       <div v-if="examenes.length" class="column items-center q-mt-md">
-        <q-card v-for="(item,index) in examenes" :key="index" v-ripple clickable class="q-pa-none q-mb-md" style="width: 95%; border-radius: 15px">
-          <div class="row justify-end">
-            <div class="col-6 q-pa-sm q-mt-lg">
-              <div class="text-h6 absolute-top q-py-xs q-px-sm ellipsis" style="z-index: 5">{{item.title}}</div>
-              <div class="q-pt-sm">Preguntas: <b>{{item.cantidad}}</b></div>
-              <div>Puntuación: <b>{{item.point}}</b></div>
-              <div class="absolute-bottom q-pa-md">
-                <q-btn no-caps color="black" label="Iniciar" />
-              </div>
-            </div>
-            <div class="col-6 q-pa-none">
-              <q-img :src="baseuExamen + item._id" style="height: 170px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
+        <q-card v-for="(item,index) in examenes" :key="index" v-ripple clickable class="q-pa-none q-mb-md" style="width: 95%; border-radius: 15px"
+        @click="$router.push('/iniciar_examen/' + item._id)">
+          <q-img :src="baseuExamen + item._id" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" />
+          <div class="q-pa-sm" style="height: 110px">
+            <div class="text-grey-9 text-h6">{{item.title}}</div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-grey-9 text-caption">Preguntas: {{item.cantidad}}</div>
+                </div>
+                <div class="col-6">
+                    <div class="text-caption text-grey-9"><b>Mejor calificación: </b>{{item.total_point + ' de ' + item.point}}</div>
+                    <div class="text-caption text-grey-9"><b>Fecha: </b>{{item.fecha_test}}</div>
+                </div>
             </div>
           </div>
         </q-card>

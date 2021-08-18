@@ -24,6 +24,7 @@ const routes = [
     ]
   },
 
+  { path: '/iniciar_examen/:idExamen', component: () => import('pages/user/NivelTest.vue') },
   { path: '/nivel/:id', component: () => import('pages/user/NivelTest.vue') },
   { path: '/nivel/:id/:idDesafio', component: () => import('pages/user/NivelTest.vue') },
 

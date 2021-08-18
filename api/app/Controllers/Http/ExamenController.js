@@ -1,11 +1,15 @@
 'use strict'
 const Examen = use("App/Models/Examen")
+const ExamenUser = use("App/Models/ExamenUser")
 const Question = use("App/Models/Question")
 const QuesExamen = use("App/Models/ExamenQuestion")
 const Asignatura = use("App/Models/Asignatura")
+const Puntajes = use("App/Models/Puntaje")
 const Nivele = use("App/Models/Nivele")
+const User = use("App/Models/User")
 const Helpers = use('Helpers')
 const mkdirp = use('mkdirp')
+const moment = use('moment')
 // const fs = require('fs')
 // var randomize = require('randomatic');
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -30,6 +34,25 @@ class ExamenController {
     let datos = await Examen.all()
     if (user.roles[0] === 2) {
       datos = (await Examen.query().where({enable: true}).fetch()).toJSON()
+
+      for (let i = 0; i < datos.length; i++) {
+        var examenes = (await ExamenUser.query().where({exam_id: datos[i]._id, user_id: user._id}).fetch()).toJSON()
+        if (examenes.length) {
+          var mayor = 0
+          var fecha = ''
+          for (let j = 0; j < examenes.length; j++) {
+            if (examenes[j].total_point >= mayor) {
+              mayor = examenes[j].total_point
+              fecha = moment(examenes[j].created_at).format('DD/MM/YYYY')
+            }
+          }
+          datos[i].fecha_test = fecha
+          datos[i].total_point = mayor
+        } else {
+          datos[i].fecha_test = moment(datos[i].created_at).format('DD/MM/YYYY')
+          datos[i].total_point = 0
+        }
+      }
     }
     response.send(datos)
   }
@@ -66,6 +89,16 @@ class ExamenController {
     response.send(guardar)
   }
 
+  async storeExamen ({ request, response, auth }) {
+    try {
+      let answer = request.body
+      let save = await ExamenUser.create(answer)
+      response.send(save)
+    } catch (error) {
+      console.error(error.name + 'store: ' + error.message);
+    }
+  }
+
   async update ({ params, request, response }) {
     var data = request.only(['dat'])
     data = JSON.parse(data.dat)
@@ -91,6 +124,44 @@ class ExamenController {
     var data = request.all()
     let modificar = await QuesExamen.query().where('_id', params.id).update(data)
     response.send(modificar)
+  }
+
+  async updateExamen ({ params, request, response, auth }) {
+    try {
+      const user = (await auth.getUser()).toJSON()
+      let answer = request.body
+      const update = await ExamenUser.where('_id', params.id).update(answer)
+      let result = (await ExamenUser.query().where('_id', params.id).first()).toJSON()
+
+      var puntosHoy = (await Puntajes.query().where({type: 'examen', user_id: user._id}).fetch()).toJSON()
+      var filtrados = puntosHoy.filter(v => moment(v.created_at).format('YYYY/MM/DD') === moment().format('YYYY/MM/DD'))
+      var puntos = 0
+      for (let i = 0; i < filtrados.length; i++) {
+        puntos = puntos + filtrados[i].total_point
+      }
+      if (puntos >= 500 && !user.membresia) {
+        // no agrega puntos
+      } else {
+        let dataPuntaje = {
+          total_point: answer.total_point,
+          user_id: user._id,
+          type: 'examen'
+        }
+        let puntaje = await Puntajes.create(dataPuntaje)
+        const updateUser = await User.where('_id', user._id).update({points: user.points + result.total_point})
+      }
+
+      var otras = (await ExamenUser.query().where({exam_id: result.exam_id, user_id: user._id}).fetch()).toJSON()
+      if (otras.length > 1) {
+        var largo = otras.length - 2
+        result.anterior = otras[largo].total_point
+      } else {
+        result.anterior = null
+      }
+      response.send(result)
+    } catch (error) {
+      console.error(error.name + 'update:' + error.message);
+    }
   }
 
   async destroy ({ params, request, response }) {
@@ -138,6 +209,24 @@ class ExamenController {
     }
 
     response.send(examenes)
+  }
+
+  async getExamWithQuestById ({ request, response, params }) {
+    try {
+      let examen = (await Examen.query().where('_id', params.id).first()).toJSON()
+      let dataQuestions = (await QuesExamen.query().where({exam_id: params.id}).fetch()).toJSON()
+      let questions = []
+      for (let i = 0; i < dataQuestions.length; i++) {
+        let nivelQuest = (await Question.query().where({test_id: dataQuestions[i].nivel_id}).fetch()).toJSON()
+        var randon = nivelQuest.sort(() => Math.random() - 0.5)
+        var agregar = randon.slice(0, dataQuestions[i].cantidad)
+        questions = questions.concat(agregar)
+      }
+      examen.questions = questions
+      response.send(examen)
+    } catch (error) {
+      console.error(error.name + '1: ' + error.message)
+    }
   }
 }
 
