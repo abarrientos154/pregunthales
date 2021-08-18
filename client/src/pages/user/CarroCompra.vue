@@ -35,7 +35,7 @@
           </q-card>
         </div>
 
-        <q-card flat clickable v-ripple v-if="membresia" class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
+        <q-card v-if="membresia" flat clickable v-ripple class="row items-start q-px-sm q-mt-md q-py-md" style="width:100%"
         @click="user.membresia ? verDialog() : verFacturaMembresia = true">
           <div>
               <q-img src="app movil 33.png" style="width:100px; height: 100px; border-radius: 15px" />
@@ -48,7 +48,7 @@
         </q-card>
 
       <q-dialog v-model="verFacturaPuntos">
-        <q-card class="q-pa-md" style="width:100%">
+        <q-card class="q-pa-md" style="width:100%; border-radius:15px">
           <div class="text-h6">Paquete de puntos</div>
           <div class="row items-start q-mt-md q-py-md">
             <div>
@@ -61,14 +61,13 @@
             </div>
           </div>
           <div class="row justify-center q-pt-xl">
-            <q-btn no-caps color="black" label="Pagar" style="width:80%"
-            @click="comprarPuntos(puntosSelec)" />
+            <paypal @pagoProcesado="comprarPuntos" :total="puntosSelec === 1 ? 0.99 : 1.5" :descripcion="'Puntos'" style="width:100%" />
           </div>
         </q-card>
       </q-dialog>
 
       <q-dialog v-model="verFacturaMembresia">
-        <q-card class="q-pa-md" style="width:100%">
+        <q-card class="q-pa-md" style="width:100%; border-radius:15px">
           <div class="text-h6">Adquirir membresia</div>
           <div class="row items-start q-mt-md q-py-md">
             <div>
@@ -81,21 +80,8 @@
             </div>
           </div>
           <div class="row justify-center q-pt-xl">
-            <q-btn no-caps color="black" label="Pagar" style="width:80%"
-            @click="verFacturaMembresia = false, paypalMembresia = true" />
+            <paypal @pagoProcesado="comprarMembresia" :total="5" :descripcion="'Membresia'" style="width:100%" />
           </div>
-        </q-card>
-      </q-dialog>
-
-      <q-dialog v-model="paypalPuntos" persistent maximized>
-        <q-card style="width:100%">
-          <paypal :total="puntosSelec === 1 ? 1000 : 2000" :descripcion="'Puntos'" />
-        </q-card>
-      </q-dialog>
-
-      <q-dialog v-model="paypalMembresia" persistent maximized>
-        <q-card style="width:100%; height: 100%">
-          <paypal :total="5" :descripcion="'Membresia'" />
         </q-card>
       </q-dialog>
 
@@ -146,11 +132,11 @@ export default {
         }
       })
     },
-    async comprarPuntos (val) {
+    async comprarPuntos () {
       this.$q.loading.show({
         message: 'Adquiriendo puntos...'
       })
-      await this.$api.post('comprar_puntos', { puntos: val === 1 ? 1000 : 2000, costo: val === 1 ? 0.99 : 1.5 }).then(res => {
+      await this.$api.post('comprar_puntos', { puntos: this.puntosSelec === 1 ? 1000 : 2000, costo: this.puntosSelec === 1 ? 0.99 : 1.5 }).then(res => {
         if (res) {
           this.$q.loading.hide()
           this.compraExitosa = true
