@@ -8,7 +8,7 @@
         <div class="row">
           <div class="col-6 q-pa-sm">
             <div class="text-h6">{{item.name}}</div>
-            <div class="text-caption">{{'Descripcion'}}</div>
+            <div class="text-caption">{{item.descripcion}}</div>
             <div class="absolute-bottom q-pa-md">
               <q-btn no-caps color="black" label="Ingresar" class="q-px-md"
               @click="$router.push('/niveles/' + item._id)" />
