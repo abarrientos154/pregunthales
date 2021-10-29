@@ -56,7 +56,7 @@
           </div>
 
           <div class="column items-center justify-center q-my-md" style="width: 70%">
-            <q-btn color="black" text-color="white" label="Registrar" :loading="loading" @click="registrarse()" no-caps class="q-py-xs" style="width:100%">
+            <q-btn color="accent" text-color="white" label="Registrar" :loading="loading" @click="registrarse()" no-caps class="q-py-xs" style="width:100%">
               <template v-slot:loading>
                 <q-spinner-hourglass class="on-center" />
                 Registrando...

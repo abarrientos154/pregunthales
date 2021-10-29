@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="row justify-center q-pa-md" v-if="item.status2 === 1">
-            <q-btn no-caps color="black" label="Iniciar desafio" style="width: 80%"
+            <q-btn no-caps color="accent" label="Iniciar desafio" style="width: 80%"
             @click="verificar(item)" />
           </div>
         </q-card>
@@ -82,7 +82,7 @@
             </div>
           </div>
           <div class="row justify-center q-pa-md" v-if="item.status1 === 1">
-            <q-btn no-caps color="black" label="Iniciar desafio" style="width: 80%"
+            <q-btn no-caps color="accent" label="Iniciar desafio" style="width: 80%"
             @click="verificar(item)" />
           </div>
         </q-card>

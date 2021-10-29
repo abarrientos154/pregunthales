@@ -27,15 +27,9 @@ const asignaturaData = [
     status: false
   },
   {
-    name: 'MATE I',
+    name: 'MATE',
     description: '',
     img: 'app movil 19.png',
-    status: false
-  },
-  {
-    name: 'MATE II',
-    description: '',
-    img: 'app movil 22.png',
     status: false
   },
   {

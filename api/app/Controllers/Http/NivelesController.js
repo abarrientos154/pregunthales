@@ -60,16 +60,18 @@ class NivelesController {
       }
       let save = await Nivele.create(data)
 
-      const profilePic = request.file('files', {
-        types: ['image']
-      })
-      if (Helpers.appRoot('storage/uploads/niveles')) {
-        await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
-          name: save._id.toString(),
-          overwrite: true
+      if (data.img) {
+        const profilePic = request.file('files', {
+          types: ['image']
         })
-      } else {
-        mkdirp.sync(`${__dirname}/storage/Excel`)
+        if (Helpers.appRoot('storage/uploads/niveles')) {
+          await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
+            name: save._id.toString(),
+            overwrite: true
+          })
+        } else {
+          mkdirp.sync(`${__dirname}/storage/Excel`)
+        }
       }
 
       response.send(save)

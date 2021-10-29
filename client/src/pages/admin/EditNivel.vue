@@ -6,7 +6,7 @@
       <div class="column q-ma-md">
         <div class="text-h6 text-primary">Nueva Pregunta</div>
         <div class="row">
-          <q-btn @click="newQ = true" class="text-subtitle1" padding="10px 5px" color="primary" icon="add" no-caps>Nueva</q-btn>
+          <q-btn @click="newQ = true" class="text-subtitle1" padding="10px 5px" color="accent" icon="add" no-caps>Nueva</q-btn>
         </div>
       </div>
     </q-card>

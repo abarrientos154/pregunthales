@@ -34,7 +34,7 @@
         <q-radio class="col" v-model="quest.result" val="C" label="Opción C" />
         <q-radio class="col" v-model="quest.result" val="D" label="Opción D" />
       </div>
-      <q-btn color="primary" @click="edit ?update() : save()" :label="edit ? 'Actualizar' : 'Guardar'"/>
+      <q-btn color="accent" @click="edit ?update() : save()" :label="edit ? 'Actualizar' : 'Guardar'"/>
     </q-card>
   </div>
 </template>

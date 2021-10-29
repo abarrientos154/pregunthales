@@ -9,9 +9,8 @@
         <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         <div class="absolute-center" style="width:100%">
           <div class="q-pb-sm row justify-center">
-            <img :src="baseuNivel + test._id" style="height: 280px; width: 280px; border-radius: 20px">
+            <img :src="!examen ? test.img ? baseuNivel + test._id : 'noimg.png' : baseuNivel + test._id" style="height: 280px; width: 280px; border-radius: 20px">
           </div>
-          <div class="text-center text-h6 text-white">Comenzar <b>{{test.title}}</b></div>
         </div>
         <div class="absolute-bottom row justify-center q-py-md">
           <q-btn no-caps color="purple" label="Comenzar" size="lg" style="width: 90%" @click="desafio ? startDesafio() : examen ? startExamen() : start()" />
@@ -38,7 +37,7 @@
                   </q-field>
                 </div>
                 <div class="row justify-center">
-                    <img :src="baseuPregunta + pregunta._id" style="height: 400px; width: 100%">
+                    <img :src="baseuPregunta + pregunta._id" style="height: 300px; width: 100%">
                 </div>
                 <div class="shadow-up-1 column items-center justify-center full-width bg-white" style="position:relative; top:-15px; border-top-left-radius: 20px; border-top-right-radius: 20px">
                     <div class="text-subtitle1 text-grey-9 text-center q-pa-md">{{pregunta.question}}</div>
@@ -55,7 +54,7 @@
                         </div>
                     </div>
                     <div class="column items-center q-py-md" style="width:100%;">
-                        <q-btn no-caps color="black" :label="index + 1 === questions.length ? 'Terminar' : 'Responder'" style="width:90%" size="lg" :disable="index + 1 === questions.length ? false : pregunta.isActive ? false : true" @click="index + 1 === questions.length ? save() : $refs.carousel.next()" />
+                        <q-btn no-caps color="accent" :label="index + 1 === questions.length ? 'Terminar' : 'Responder'" style="width:90%" size="lg" :disable="index + 1 === questions.length ? false : pregunta.isActive ? false : true" @click="index + 1 === questions.length ? save() : $refs.carousel.next()" />
                         <q-btn v-if="index + 1 !== questions.length" flat no-caps color="grey-9" label="Omitir" style="width:90%" size="lg" @click="omitir(pregunta)" />
                     </div>
                 </div>
@@ -66,10 +65,8 @@
       <q-carousel-slide :name="3" class="q-pa-none column justify-between" style="height:auto" img-src="app movil 12.png">
         <div class="text-center text-white text-h6 q-pt-md">Examen finalizado con éxito</div>
         <div class="column items-center q-py-md">
-          <div class="text-center text-h6 text-white">Tu puntuación fue: {{test.total_point}} puntos</div>
-          <div class="text-center text-h6 text-white">Preguntas omitidas: {{test.omitidas}}</div>
-          <div v-if="!desafio" class="text-center text-h6 text-white">Puntuación anterior: {{test.anterior !== null ? test.anterior + ' puntos' : 'No hay'}}</div>
-          <div class="text-center text-h6 text-white q-pb-md">Tiempo de término: {{timeTest - minutos}}m y {{60 - segundos}}s</div>
+          <div class="text-center text-h6 text-white q-pb-md">Tu puntuación fue: {{test.total_point}} puntos</div>
+          <div v-if="!desafio" class="text-center text-h6 text-white q-pb-md">Puntuación anterior: {{test.anterior !== null ? test.anterior + ' puntos' : 'No hay'}}</div>
           <q-btn no-caps color="purple" label="Ir al inicio" size="lg" style="width: 90%" @click="!desafio ? $router.go(-1) : $router.push('/desafios')" />
         </div>
       </q-carousel-slide>
@@ -182,7 +179,7 @@ export default {
       })
     },
     valueTiempo () {
-      this.minutos = this.timeTest
+      this.minutos = this.timeTest - 1
       this.segundos = 60
       this.timeCounter = setInterval(timer, 1000)
       const vm = this

@@ -99,7 +99,7 @@
         </q-select>
 
         <div class="row justify-center q-py-md">
-            <q-btn no-caps color="black" label="Desafiar" size="1.3em" style="width:100%" @click="desafiar()" />
+            <q-btn no-caps color="accent" label="Desafiar" size="1.3em" style="width:100%" @click="desafiar()" />
         </div>
       </div>
     </div>

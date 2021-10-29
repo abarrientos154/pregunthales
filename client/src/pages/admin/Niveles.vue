@@ -3,7 +3,7 @@
     <div class="text-primary text-h5">{{course.name}}</div>
     <div class="text-black text-subtitle1 text-weight-bolder q-mb-lg">Niveles</div>
     <div class="column items-center" style="width: 100%" v-if="tests.length > 0">
-      <q-card v-for="(item,index) in tests" clickable :key="index" class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
+      <q-card v-for="(item,index) in tests" clickable :key="index" class="q-pa-none bordes q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
         <div class="row">
           <div class="col-6 q-pa-sm">
             <div class="text-h6" @click="$router.push('/preguntas/' + item._id)">{{item.title}}</div>
@@ -13,7 +13,7 @@
             </div>
           </div>
           <div v-ripple class="col-6 q-pa-none" @click="$router.push('/preguntas/' + item._id)">
-            <q-img :src="baseuNivel + item._id" style="height: 150px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
+            <q-img :src="item.img ? baseuNivel + item._id : 'noimg.png'" style="height: 150px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
           </div>
         </div>
       </q-card>
@@ -32,11 +32,11 @@
             <q-avatar size="100px" class="bg-grey-5">
               <q-img :src="edit ? imgNivel : nivelFile ? imgNivel : ''" style="height: 100%">
                 <q-file borderless v-model="nivelFile" @input="changeFile()" accept=".jpg, image/*" style="width: 100%; height: 100%; font-size: 0px">
-                  <q-icon name="cloud_upload" class="absolute-center q-mt-lg" size="45px" color="white" />
+                  <q-icon name="cloud_upload" class="absolute-center cursor-pointer q-mt-lg" size="45px" color="white" />
                 </q-file>
               </q-img>
             </q-avatar>
-            <div :class="$v.nivelFile.$error ? 'text-negative' : 'text-grey-9'">Imagen del nivel</div>
+            <div class="text-grey-9">Imagen del nivel</div>
           </div>
           <q-input
             dense
@@ -82,15 +82,15 @@
           />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" v-close-popup no-caps style="width:100px"/>
-          <q-btn :label="edit ? 'Actualizar' :  'Guardar'" color="primary" no-caps style="width:100px"
+          <q-btn label="Cancelar" color="accent" v-close-popup no-caps style="width:100px"/>
+          <q-btn :label="edit ? 'Actualizar' :  'Guardar'" color="accent" no-caps style="width:100px"
           @click="edit ? actualizarTem() : crearTem()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-page-sticky position="bottom-right" :offset="[20, 20]">
-      <q-btn round icon="add" color="primary" size="20px" @click="editTem()"/>
+      <q-btn round icon="add" color="accent" size="20px" @click="editTem()"/>
     </q-page-sticky>
   </div>
 </template>
@@ -118,8 +118,7 @@ export default {
       title: { required },
       point: { required },
       time: { required }
-    },
-    nivelFile: { required }
+    }
   },
   mounted () {
     this.baseuNivel = env.apiUrl + 'nivel_img/'
@@ -140,13 +139,18 @@ export default {
     },
     crearTem () {
       this.$v.$touch()
-      if (!this.$v.form.$error && !this.$v.nivelFile.$error) {
+      if (!this.$v.form.$error) {
         this.$q.loading.show({
           message: 'Agregando nivel, por favor espere...'
         })
         this.form.family_id = this.$route.params.id
         const formData = new FormData()
-        formData.append('files', this.nivelFile)
+        if (this.nivelFile) {
+          formData.append('files', this.nivelFile)
+          this.form.img = true
+        } else {
+          this.form.img = false
+        }
         formData.append('dat', JSON.stringify(this.form))
         this.$api.post('nivel', formData, {
           headers: {
@@ -178,6 +182,7 @@ export default {
         if (this.nivelFile) {
           formData.append('files', this.nivelFile)
           this.form.file = true
+          this.form.img = true
         } else {
           this.form.file = false
         }
@@ -214,12 +219,11 @@ export default {
       if (itm) {
         const datos = { ...itm }
         this.form = datos
-        this.imgNivel = this.baseuNivel + this.form._id
+        this.imgNivel = this.form.img ? this.baseuNivel + this.form._id : ''
         this.nuevo = true
         this.edit = true
       } else {
         this.nuevo = true
-        this.$v.nivelFile.$reset()
         this.$v.form.$reset()
       }
     },
@@ -253,3 +257,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.bordes {
+  border: 2px solid $accent;
+}
+</style>

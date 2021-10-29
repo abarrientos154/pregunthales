@@ -30,7 +30,7 @@
         </q-select>
 
         <div class="row justify-center q-py-md">
-            <q-btn no-caps color="black" label="Responder" size="1.3em" style="width:100%" @click="responder()" />
+            <q-btn no-caps color="accent" label="Responder" size="1.3em" style="width:100%" @click="responder()" />
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@
     </div>
 
     <div class="q-my-md row justify-center" style="width: 100%">
-      <q-btn color="black" text-color="white" label="Ingresar" :loading="loading" @click="loguear()" no-caps class="q-py-xs" style="width: 100%">
+      <q-btn color="accent" text-color="white" label="Ingresar" :loading="loading" @click="loguear()" no-caps class="q-py-xs" style="width: 100%">
         <template v-slot:loading>
           <q-spinner-hourglass class="on-center" />
           Ingresando...

@@ -35,7 +35,7 @@
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[20, 20]">
-      <q-btn round icon="add" color="primary" size="20px" :disable="examen.faltantes > 0 ? false : true"
+      <q-btn round icon="add" color="accent" size="20px" :disable="examen.faltantes > 0 ? false : true"
       @click="newQuest()" />
     </q-page-sticky>
 
@@ -104,7 +104,7 @@
             />
 
             <div class="row justify-center q-pt-lg">
-                <q-btn no-caps color="black" label="Guardar" style="width:80%" @click="!edit ? generar() : actualizar()" />
+                <q-btn no-caps color="accent" label="Guardar" style="width:80%" @click="!edit ? generar() : actualizar()" />
             </div>
         </q-card>
     </q-dialog>

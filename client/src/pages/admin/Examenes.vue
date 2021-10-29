@@ -16,7 +16,7 @@
           <div class="absolute-bottom row q-pa-md">
               <q-btn flat dense round class="q-mx-sm" color="primary" icon="edit" @click="editExam(item)"/>
               <q-btn flat dense round class="q-mx-sm" color="red" icon="delete" @click="eiminarExam(item._id)"/>
-              <q-btn no-caps class="q-mx-sm" color="black" label="Ingresar"
+              <q-btn no-caps class="q-mx-sm" color="accent" label="Ingresar"
               @click="$router.push('/examen/' + item._id)"/>
             </div>
         </div>
@@ -102,15 +102,15 @@
           </div>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn label="Cancelar" color="primary" v-close-popup no-caps style="width:100px"/>
-          <q-btn :label="edit ? 'Actualizar' :  'Guardar'" color="primary" no-caps style="width:100px"
+          <q-btn label="Cancelar" color="accent" v-close-popup no-caps style="width:100px"/>
+          <q-btn :label="edit ? 'Actualizar' :  'Guardar'" color="accent" no-caps style="width:100px"
           @click="edit ? actualizarExam() : crearExam()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-page-sticky position="bottom-right" :offset="[20, 20]">
-      <q-btn round icon="add" color="primary" size="20px" @click="editExam()"/>
+      <q-btn round icon="add" color="accent" size="20px" @click="editExam()"/>
     </q-page-sticky>
   </div>
 </template>

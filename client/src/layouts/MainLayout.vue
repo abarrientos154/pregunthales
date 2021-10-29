@@ -32,7 +32,7 @@
       </q-drawer>
 
       <q-footer elevated v-if="rol === 2">
-        <div class="bg-primary shadow-2 full-width row justify-around q-py-sm" >
+        <div class="bg-accent shadow-2 full-width row justify-around q-py-sm" >
           <div class="row items-center" v-for="(item, index) in menu" :key="index">
             <q-btn :icon="item.icon" color="white" flat stack dense no-caps size="md" @click="item.label === 'Cerrar Sesión' ? cerrarSesion() : $router.push(item.ruta)">
               <div class="text-caption">{{item.label}}</div>

@@ -21,7 +21,7 @@
               <div class="text-h6 text-grey-9 ellipsis">{{item.name}}</div>
               <div class="text-caption text-grey-9 ellipsis-3-lines">{{'Descripcion'}}</div>
               <div class="absolute-bottom q-pa-md">
-                <q-btn no-caps color="black" label="Ingresar"
+                <q-btn no-caps color="accent" label="Ingresar"
                 @click="$router.push('/asignatura/niveles/' + item._id)" />
               </div>
             </div>

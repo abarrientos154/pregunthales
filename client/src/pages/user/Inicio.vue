@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="absolute-top-right text-white q-pa-sm text-right" style="z-index: 4">
+      <div class="text-h6">Puntaje general</div>
+      <div class="text-h5 text-bold">{{puntaje}}</div>
+    </div>
     <div class="row justify-center">
       <q-img src="app movil 14.png" style="height: 280px; width: 100%" />
     </div>
@@ -30,7 +34,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn no-caps label="Ver desafio" color="primary" @click="$router.push('/desafio/' + idDesafio)" />
+          <q-btn no-caps label="Ver desafio" color="accent" @click="$router.push('/desafio/' + idDesafio)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -44,6 +48,7 @@ export default {
     return {
       alertaDesafio: false,
       idDesafio: '',
+      puntaje: 0,
       thumbStyle: {
         right: '5px',
         borderRadius: '50px',
@@ -75,6 +80,7 @@ export default {
   },
   mounted () {
     this.getDesafio()
+    this.getPuntaje()
   },
   methods: {
     async getDesafio () {
@@ -82,6 +88,13 @@ export default {
         if (res) {
           this.alertaDesafio = true
           this.idDesafio = res._id
+        }
+      })
+    },
+    getPuntaje () {
+      this.$api.get('user_info').then(res => {
+        if (res) {
+          this.puntaje = res.points
         }
       })
     }

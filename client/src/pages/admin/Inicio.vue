@@ -10,7 +10,7 @@
             <div class="text-h6">{{item.name}}</div>
             <div class="text-caption">{{item.descripcion}}</div>
             <div class="absolute-bottom q-pa-md">
-              <q-btn no-caps color="black" label="Ingresar" class="q-px-md"
+              <q-btn no-caps color="accent" label="Ingresar" class="q-px-md"
               @click="$router.push('/niveles/' + item._id)" />
             </div>
           </div>
