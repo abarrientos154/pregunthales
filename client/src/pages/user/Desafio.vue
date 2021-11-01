@@ -81,9 +81,6 @@
                     v-bind="scope.itemProps"
                     v-on="scope.itemEvents"
                     >
-                    <q-item-section avatar>
-                        <q-img :src="baseuNivel + scope.opt._id" style="width:40px; height:40px; border-radius:100%"/>
-                    </q-item-section>
                     <q-item-section>
                         <q-item-label v-html="scope.opt.title" />
                     </q-item-section>
@@ -116,7 +113,6 @@ export default {
       courseSelec: null,
       nivelSelec: null,
       baseuPerfil: '',
-      baseuNivel: '',
       puntaje: 0,
       puntajeHoy: 0,
       user: {},
@@ -133,7 +129,6 @@ export default {
   },
   mounted () {
     this.baseuPerfil = env.apiUrl + 'perfil_img/'
-    this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.getUser()
     this.getAllUsers()
     this.getAsignaturas()

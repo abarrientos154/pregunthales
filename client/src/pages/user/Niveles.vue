@@ -15,13 +15,13 @@
       <div class="text-grey-8 text-h6 q-pl-md">{{course.name}}</div>
       <div class="text-grey-8 text-caption q-pl-md">{{course.description}}</div>
       <div v-if="tests.length > 0" class="column items-center q-mt-md">
-        <q-card v-for="(item,index) in tests" :key="index" v-ripple class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
+        <q-card v-for="(item,index) in tests" :key="index" v-ripple class="bordes q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
         @click="item.enable ? $router.push('/nivel/' + item._id) : ''">
-          <q-img :src="item.img ? baseuNivel + item._id : 'noimg.png'" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" >
-            <div v-if="!item.enable" class="absolute-full">
-              <q-icon class="absolute-center" size="lg" color="white" name="lock" />
+          <div class="bg-accent row justify-center items-center" style="height:50px; width:100%">
+            <div v-if="!item.enable">
+              <q-icon size="lg" color="white" name="lock" />
             </div>
-          </q-img>
+          </div>
           <div class="row q-pa-sm" style="height: 100px">
             <div class="col-6">
               <div class="text-grey-9 text-h6">{{item.title}}</div>
@@ -42,11 +42,9 @@
 </template>
 
 <script>
-import env from '../../env'
 export default {
   data () {
     return {
-      baseuNivel: '',
       puntaje: 0,
       puntajeHoy: 0,
       form: {},
@@ -55,7 +53,6 @@ export default {
     }
   },
   mounted () {
-    this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.getCourse(this.$route.params.id)
     this.getPuntaje()
   },
@@ -87,3 +84,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.bordes {
+  border: 2px solid $accent;
+}
+</style>

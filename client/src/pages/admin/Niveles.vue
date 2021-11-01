@@ -3,19 +3,15 @@
     <div class="text-primary text-h5">{{course.name}}</div>
     <div class="text-black text-subtitle1 text-weight-bolder q-mb-lg">Niveles</div>
     <div class="column items-center" style="width: 100%" v-if="tests.length > 0">
-      <q-card v-for="(item,index) in tests" clickable :key="index" class="q-pa-none bordes q-mb-md" style="width: 98%; border-radius: 15px; min-width: 300px; max-width: 500px">
-        <div class="row">
-          <div class="col-6 q-pa-sm">
-            <div class="text-h6" @click="$router.push('/preguntas/' + item._id)">{{item.title}}</div>
-            <div class="absolute-bottom row q-pa-md">
+      <q-card v-for="(item,index) in tests" clickable v-ripple :key="index" class="q-pa-none bordes q-mb-md" style="width: 98%; height: 150px; border-radius: 15px; min-width: 300px; max-width: 500px"
+      >
+          <div class="q-pa-sm absolute-full" @click="$router.push('/preguntas/' + item._id)">
+            <div class="text-h6" >{{item.title}}</div>
+          </div>
+        <div class="absolute-bottom row q-pa-md">
               <q-btn flat dense round class="q-mx-sm" color="primary" icon="edit" @click="editTem(item)"/>
               <q-btn flat dense round class="q-mx-sm" color="red" icon="delete" @click="eiminarTem(item._id)"/>
             </div>
-          </div>
-          <div v-ripple class="col-6 q-pa-none" @click="$router.push('/preguntas/' + item._id)">
-            <q-img :src="item.img ? baseuNivel + item._id : 'noimg.png'" style="height: 150px; width: 100%; border-top-right-radius: 15px; border-bottom-right-radius: 15px" />
-          </div>
-        </div>
       </q-card>
     </div>
     <q-card v-else class="shadow-2 q-ma-md q-pa-md">
@@ -28,16 +24,6 @@
           <div class="text-h6">{{edit ? 'Editar Nivel' : 'Crear Nivel'}}</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <div class="column items-center q-pb-sm">
-            <q-avatar size="100px" class="bg-grey-5">
-              <q-img :src="edit ? imgNivel : nivelFile ? imgNivel : ''" style="height: 100%">
-                <q-file borderless v-model="nivelFile" @input="changeFile()" accept=".jpg, image/*" style="width: 100%; height: 100%; font-size: 0px">
-                  <q-icon name="cloud_upload" class="absolute-center cursor-pointer q-mt-lg" size="45px" color="white" />
-                </q-file>
-              </q-img>
-            </q-avatar>
-            <div class="text-grey-9">Imagen del nivel</div>
-          </div>
           <q-input
             dense
             outlined
@@ -96,16 +82,12 @@
 </template>
 
 <script>
-import env from '../../env'
 import { required } from 'vuelidate/lib/validators'
 export default {
   data () {
     return {
       edit: false,
       nuevo: false,
-      nivelFile: null,
-      imgNivel: '',
-      baseuNivel: '',
       form: {
         type: false
       },
@@ -121,7 +103,6 @@ export default {
     }
   },
   mounted () {
-    this.baseuNivel = env.apiUrl + 'nivel_img/'
     this.getCourse(this.$route.params.id)
   },
   methods: {
@@ -144,19 +125,7 @@ export default {
           message: 'Agregando nivel, por favor espere...'
         })
         this.form.family_id = this.$route.params.id
-        const formData = new FormData()
-        if (this.nivelFile) {
-          formData.append('files', this.nivelFile)
-          this.form.img = true
-        } else {
-          this.form.img = false
-        }
-        formData.append('dat', JSON.stringify(this.form))
-        this.$api.post('nivel', formData, {
-          headers: {
-            'Content-Type': undefined
-          }
-        }).then((res) => {
+        this.$api.post('nivel', this.form).then((res) => {
           if (res) {
             this.$q.loading.hide()
             this.$q.notify({
@@ -178,20 +147,7 @@ export default {
         this.$q.loading.show({
           message: 'Actualizando nivel, por favor espere...'
         })
-        const formData = new FormData()
-        if (this.nivelFile) {
-          formData.append('files', this.nivelFile)
-          this.form.file = true
-          this.form.img = true
-        } else {
-          this.form.file = false
-        }
-        formData.append('dat', JSON.stringify(this.form))
-        this.$api.put('nivel/' + this.form._id, formData, {
-          headers: {
-            'Content-Type': undefined
-          }
-        }).then((res) => {
+        this.$api.put('nivel/' + this.form._id, this.form).then((res) => {
           if (res) {
             this.$q.loading.hide()
             this.$q.notify({
@@ -199,9 +155,6 @@ export default {
               message: 'Nivel actualizado correctamente'
             })
             this.nuevo = false
-            if (this.form.file) {
-              location.reload()
-            }
             this.getCourse(this.$route.params.id)
           }
         })
@@ -211,15 +164,12 @@ export default {
       this.form = {
         type: false
       }
-      this.nivelFile = null
-      this.imgNivel = ''
       this.edit = false
     },
     editTem (itm) {
       if (itm) {
         const datos = { ...itm }
         this.form = datos
-        this.imgNivel = this.form.img ? this.baseuNivel + this.form._id : ''
         this.nuevo = true
         this.edit = true
       } else {
@@ -250,9 +200,6 @@ export default {
       }).onCancel(() => {
         // console.log('>>>> Cancel')
       })
-    },
-    changeFile () {
-      if (this.nivelFile) { this.imgNivel = URL.createObjectURL(this.nivelFile) }
     }
   }
 }
@@ -261,5 +208,6 @@ export default {
 <style scoped lang="scss">
 .bordes {
   border: 2px solid $accent;
+  border-top: 30px solid $accent;
 }
 </style>

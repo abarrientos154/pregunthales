@@ -15,15 +15,14 @@
       <div class="text-grey-8 text-h6 q-pl-md">Desafios</div>
       <div class="text-grey-8 text-caption q-pl-md">Desafios a los que has sido convocado</div>
       <div v-if="desafiado.length > 0" class="column items-center q-mt-md">
-        <q-card v-for="(item,index) in desafiado" :key="index" v-ripple class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
+        <q-card v-for="(item,index) in desafiado" :key="index" v-ripple class="bordes q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
         @click="item.status2 === 0 ? $router.push('/desafio/' + item._id) : item.ganador !== 0 ? selecDesafio(item) : ''">
-          <q-img :src="baseuNivel + item.nivel_id" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" />
           <div class="absolute-top-right">
               <q-chip :color="item.status2 === 0 ? 'blue' : item.status2 === 1 ? 'positive' : item.status2 === 2 ? 'primary' : 'negative'" text-color="white">
                 {{item.status2 === 0 ? 'Pendiente' : item.status2 === 1 ? 'Aceptado' : item.status2 === 2 ? 'Completado' : 'Rechazado'}}
               </q-chip>
           </div>
-          <div class="row q-pa-sm">
+          <div class="row q-pa-sm q-mt-xl">
             <div class="col-6 column items-center">
               <div>
                 <q-img :src="baseuPerfil + item.creadorInfo._id" style="width:100px; height:100px; border-radius: 100%" />
@@ -54,16 +53,15 @@
       <div class="text-grey-8 text-h6 q-pl-md">Mis desafios</div>
       <div class="text-grey-8 text-caption q-pl-md">Desafios que has creado</div>
       <div v-if="creador.length > 0" class="column items-center q-mt-md">
-        <q-card v-for="(item,index) in creador" :key="index" v-ripple class="q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
+        <q-card v-for="(item,index) in creador" :key="index" v-ripple class="bordes q-pa-none q-mb-md" style="width: 98%; border-radius: 15px"
         @click="item.ganador !== 0 ? selecDesafio(item) : ''"
         >
-          <q-img :src="baseuNivel + item.nivel_id" style="height: 100px; width: 100%; border-top-right-radius: 15px; border-top-left-radius: 15px" />
           <div class="absolute-top-right">
               <q-chip :color="item.status1 === 0 ? 'blue' : item.status1 === 1 ? 'positive' : item.status1 === 2 ? 'primary' : 'negative'" text-color="white">
                 {{item.status1 === 0 ? 'Pendiente' : item.status1 === 1 ? 'Aceptado' : item.status1 === 2 ? 'Completado' : 'Rechazado'}}
               </q-chip>
           </div>
-          <div class="row q-pa-sm">
+          <div class="row q-pa-sm q-mt-xl">
             <div class="col-6 column items-center">
               <div>
                 <q-img :src="baseuPerfil + item.creadorInfo._id" style="width:100px; height:100px; border-radius: 100%" />
@@ -199,3 +197,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.bordes {
+  border: 2px solid $accent;
+}
+</style>

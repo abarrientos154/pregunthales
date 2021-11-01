@@ -47,8 +47,7 @@ class NivelesController {
    */
   async store ({ request, response }) {
     try {
-      var data = request.only(['dat'])
-      data = JSON.parse(data.dat)
+      var data = request.all()
       data.family_id = new ObjectId(data.family_id)
       var id = (await Nivele.query().where({}).fetch()).toJSON()
       if (id.length < 1) {
@@ -59,20 +58,6 @@ class NivelesController {
         data.id = id
       }
       let save = await Nivele.create(data)
-
-      if (data.img) {
-        const profilePic = request.file('files', {
-          types: ['image']
-        })
-        if (Helpers.appRoot('storage/uploads/niveles')) {
-          await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
-            name: save._id.toString(),
-            overwrite: true
-          })
-        } else {
-          mkdirp.sync(`${__dirname}/storage/Excel`)
-        }
-      }
 
       response.send(save)
     } catch (error) {
@@ -113,23 +98,8 @@ class NivelesController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    var data = request.only(['dat'])
-    data = JSON.parse(data.dat)
+    var data = request.all()
     data.family_id = new ObjectId(data.family_id)
-    if (data.file) {
-      const profilePic = request.file('files', {
-        types: ['image']
-      })
-      if (Helpers.appRoot('storage/uploads/niveles')) {
-        await profilePic.move(Helpers.appRoot('storage/uploads/niveles'), {
-          name: data._id.toString(),
-          overwrite: true
-        })
-      } else {
-        mkdirp.sync(`${__dirname}/storage/Excel`)
-      }
-    }
-    delete data.file
     let update = await Nivele.query().where('_id', params.id).update(data)
     response.send(update)
   }

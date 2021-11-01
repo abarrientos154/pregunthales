@@ -73,9 +73,6 @@
                         v-bind="scope.itemProps"
                         v-on="scope.itemEvents"
                         >
-                        <q-item-section avatar>
-                            <q-img :src="baseuNivel + scope.opt._id" style="width:40px; height:40px; border-radius:100%"/>
-                        </q-item-section>
                         <q-item-section>
                             <q-item-label v-html="scope.opt.title" />
                             <q-item-label caption v-html="scope.opt.total_question + ' preguntas'" />
