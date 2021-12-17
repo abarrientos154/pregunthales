@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
-    <div class="absolute-top-right text-white q-pa-sm text-right">
+    <div v-if="login" class="absolute-top-right text-white q-pa-sm text-right">
       <div class="text-h6">Puntaje general</div>
       <div class="text-h5 text-bold">{{puntaje}}</div>
       <div class="q-pt-sm">Puntaje de hoy</div>
@@ -45,6 +45,7 @@
 export default {
   data () {
     return {
+      login: false,
       puntaje: 0,
       puntajeHoy: 0,
       form: {},
@@ -53,15 +54,19 @@ export default {
     }
   },
   mounted () {
+    const value = localStorage.getItem('SESSION_INFO')
+    if (value) {
+      this.login = true
+      this.getPuntaje()
+    }
     this.getCourse(this.$route.params.id)
-    this.getPuntaje()
   },
   methods: {
     async getCourse (id) {
       this.$q.loading.show({
         message: 'Cargando Datos...'
       })
-      await this.$api.get('getCourseWithTest/' + id).then(async res => {
+      await this.$api.get('getCourseWithTest/' + this.login + '/' + id).then(async res => {
         if (res) {
           this.$q.loading.hide()
           this.course = res

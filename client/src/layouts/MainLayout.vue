@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-layout view="lHh Lpr lFf">
-      <q-header v-if="rol !== 2" elevated class="bg-white">
+      <q-header v-if="rol && rol !== 2" elevated class="bg-white">
         <q-toolbar>
           <q-btn flat dense round color="primary" icon="menu" aria-label="Menu" @click="DrawerOpen = !DrawerOpen"/>
 
@@ -105,7 +105,10 @@ export default {
     }
   },
   mounted () {
-    this.getUser()
+    const value = localStorage.getItem('SESSION_INFO')
+    if (value) {
+      this.getUser()
+    }
   },
   methods: {
     ...mapMutations('generals', ['logout']),
