@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn class="absolute-top" round flat color="white" icon="arrow_back" @click="$router.go(-1)" />
-    <div class="absolute-top-right text-white q-pa-sm text-right">
+    <div v-if="login" class="absolute-top-right text-white q-pa-sm text-right">
       <div class="text-h6">Puntaje general</div>
       <div class="text-h5 text-bold">{{puntaje}}</div>
       <div class="q-pt-sm">Puntaje de hoy</div>
@@ -22,7 +22,7 @@
               <div class="text-caption text-grey-9 ellipsis-3-lines">{{'Descripcion'}}</div>
               <div class="absolute-bottom q-pa-md">
                 <q-btn no-caps color="accent" label="Ingresar"
-                @click="$router.push('/asignatura/niveles/' + item._id)" />
+                @click="login ? this.$router.push('/asignatura/niveles/' + item._id) : noLogin = true" />
               </div>
             </div>
             <div class="col-6 q-pa-none">
@@ -32,6 +32,23 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="noLogin">
+      <q-card style="width:100%">
+        <q-card-section>
+          <div class="text-h6 text-center">Atención</div>
+        </q-card-section>
+
+        <q-card-section class="text-center q-pt-none">
+          Te invitamos a registrarte para seguir disfrutanto de nuestra aplicación
+        </q-card-section>
+
+        <q-card-actions align="center" class="column">
+          <q-btn no-caps label="¡Registrarme ahora!" color="accent" to="/registro" />
+          <q-btn no-caps flat label="Ya tengo una cuenta" color="primary" to="/login" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -39,14 +56,20 @@
 export default {
   data () {
     return {
+      login: false,
+      noLogin: false,
       puntaje: 0,
       puntajeHoy: 0,
       asig: []
     }
   },
   mounted () {
+    const value = localStorage.getItem('SESSION_INFO')
+    if (value) {
+      this.login = true
+      this.getPuntaje()
+    }
     this.getAsignaturas()
-    this.getPuntaje()
   },
   methods: {
     async getAsignaturas () {

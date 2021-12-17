@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="absolute-top-right text-white q-pa-sm text-right" style="z-index: 4">
+    <div v-if="login" class="absolute-top-right text-white q-pa-sm text-right" style="z-index: 4">
       <div class="text-h6">Puntaje general</div>
       <div class="text-h5 text-bold">{{puntaje}}</div>
     </div>
@@ -14,7 +14,7 @@
       <q-scroll-area horizontal class="q-mt-md" style="height: 300px; width: 100%;" :thumb-style="thumbStyle">
         <div class="row no-wrap q-px-md q-gutter-md">
           <q-card flat style="width: 160px" clickable v-ripple v-for="(item, index) in type" :key="index"
-          @click="$router.push(item.ruta)">
+          @click="login ? $router.push(item.ruta) : !login && index !== 0 ? noLogin = true : $router.push(item.ruta)">
             <img :src="item.img" style="height: 200px; width: 100%; border-radius: 10px">
             <div class="text-h6 text-grey-8">{{item.title}}</div>
             <div class="text-caption text-grey-8">{{item.description}}</div>
@@ -22,6 +22,10 @@
         </div>
       </q-scroll-area>
     </div>
+
+    <q-page-sticky v-if="!login" position="bottom-right" :offset="[18, 18]">
+      <q-btn no-caps color="accent" label="Iniciar sesión" to="/login" />
+    </q-page-sticky>
 
     <q-dialog v-model="alertaDesafio">
       <q-card style="width:100%">
@@ -38,6 +42,23 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="noLogin">
+      <q-card style="width:100%">
+        <q-card-section>
+          <div class="text-h6 text-center">Atención</div>
+        </q-card-section>
+
+        <q-card-section class="text-center q-pt-none">
+          Te invitamos a registrarte para seguir disfrutanto de nuestra aplicación
+        </q-card-section>
+
+        <q-card-actions align="center" class="column">
+          <q-btn no-caps label="¡Registrarme ahora!" color="accent" to="/registro" />
+          <q-btn no-caps flat label="Ya tengo una cuenta" color="primary" to="/login" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -47,6 +68,8 @@ export default {
   data () {
     return {
       alertaDesafio: false,
+      noLogin: false,
+      login: false,
       idDesafio: '',
       puntaje: 0,
       thumbStyle: {
@@ -79,8 +102,12 @@ export default {
     }
   },
   mounted () {
-    this.getDesafio()
-    this.getPuntaje()
+    const value = localStorage.getItem('SESSION_INFO')
+    if (value) {
+      this.login = true
+      this.getDesafio()
+      this.getPuntaje()
+    }
   },
   methods: {
     async getDesafio () {

@@ -40,6 +40,8 @@ addPrefixToGroup(
     Route.get('pregunta_img/:file', 'UploadController.getFileByDirectoryPreguntas')
     Route.get('examen_img/:file', 'UploadController.getFileByDirectoryExamenes')
 
+    Route.get('course', 'AsignaturaController.index')
+
   })
 );
 
@@ -50,7 +52,6 @@ addPrefixToGroup(
     Route.get("all_user", "UserController.index")
     Route.put('updateUser/:id', 'UserController.update')
 
-    Route.get('course', 'AsignaturaController.index')
     Route.get('asignatura_by_id/:id', 'AsignaturaController.getAsignaturaById')
     Route.get('getCourseWithTest/:id', 'AsignaturaController.getCourseWithTest')
     Route.put('updateAsignatura/:id', 'AsignaturaController.update')
