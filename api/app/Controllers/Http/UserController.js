@@ -109,21 +109,6 @@ class UserController {
     let modificar = await User.query().where('_id', params.id).update(dat)
     response.send(modificar)
   }
-
-  async comprarPuntos({ request, response, auth }) {
-    const user = (await auth.getUser())
-    let data = request.all()
-    user.points = user.points + data.puntos
-    user.save()
-    response.send(user)
-  }
-
-  async comprarMembresia({ request, response, auth }) {
-    const user = (await auth.getUser())
-    user.membresia = true
-    user.save()
-    response.send(user)
-  }
 }
 
 module.exports = UserController;

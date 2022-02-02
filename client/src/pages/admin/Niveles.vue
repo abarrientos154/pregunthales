@@ -62,10 +62,6 @@
               />
             </div>
           </div>
-          <q-toggle
-            v-model="form.type"
-            label="Nivel gratuito"
-          />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn label="Cancelar" color="accent" v-close-popup no-caps style="width:100px"/>
@@ -89,7 +85,7 @@ export default {
       edit: false,
       nuevo: false,
       form: {
-        type: false
+        type: true
       },
       course: {},
       tests: []
@@ -162,7 +158,7 @@ export default {
     },
     decartarCamb () {
       this.form = {
-        type: false
+        type: true
       }
       this.edit = false
     },

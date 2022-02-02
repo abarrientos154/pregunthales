@@ -87,11 +87,6 @@ export default {
           ruta: '/inicio'
         },
         {
-          icon: 'store',
-          label: 'Tienda',
-          ruta: '/tienda'
-        },
-        {
           icon: 'circle_notifications',
           label: 'Desafios',
           ruta: '/desafios'

@@ -94,11 +94,6 @@
                     @blur="$v.form.cantidad.$touch()"
                 />
             </div>
-            <q-toggle
-                class="col"
-                v-model="form.type"
-                label="Examen gratuito"
-            />
           </div>
         </q-card-section>
         <q-card-actions align="right">
@@ -127,7 +122,7 @@ export default {
       imgExamen: '',
       baseuExamen: '',
       form: {
-        type: false
+        type: true
       },
       examenes: []
     }
@@ -223,7 +218,7 @@ export default {
     },
     decartarCamb () {
       this.form = {
-        type: false
+        type: true
       }
       this.examenFile = null
       this.imgExamen = ''

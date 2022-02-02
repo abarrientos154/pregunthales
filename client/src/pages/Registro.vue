@@ -68,9 +68,9 @@
 
       <q-carousel-slide :name="3" class="q-pa-none" img-src="app movil 6.png">
         <div class="absolute-bottom q-pb-xl" style="width:100%">
-          <div class="text-center text-h6 text-indigo-10">¿Quieres conocer <b @click="$router.push('/login')">nuestra tienda</b>?</div>
+          <div class="text-center text-h6 text-indigo-10">Bienvenido a Pregunthales</div>
           <div class="row justify-center">
-            <q-btn flat no-caps color="indigo-10" label="Omitir" @click="$router.push('/inicio')" />
+            <q-btn flat no-caps color="indigo-10" label="Iniciar" @click="$router.push('/inicio')" />
           </div>
         </div>
       </q-carousel-slide>
