@@ -22,7 +22,7 @@
               <div class="text-caption text-grey-9 ellipsis-3-lines">{{'Descripcion'}}</div>
               <div class="absolute-bottom q-pa-md">
                 <q-btn no-caps color="accent" label="Ingresar"
-                @click="login ? this.$router.push('/asignatura/niveles/' + item._id) : noLogin = true" />
+                @click="login ? $router.push('/asignatura/niveles/' + item._id) : noLogin = true" />
               </div>
             </div>
             <div class="col-6 q-pa-none">
