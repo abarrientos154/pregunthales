@@ -45,7 +45,8 @@ export default {
       loading: false,
       isPwd: true,
       form: {},
-      user: {}
+      user: {},
+      variable: false
     }
   },
   validations: {

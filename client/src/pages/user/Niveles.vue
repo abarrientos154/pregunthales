@@ -66,7 +66,7 @@ export default {
       this.$q.loading.show({
         message: 'Cargando Datos...'
       })
-      await this.$api.get('getCourseWithTest/' + this.login + '/' + id).then(async res => {
+      await this.$api.get('getCourseWithTest/' + id).then(async res => {
         if (res) {
           this.$q.loading.hide()
           this.course = res
