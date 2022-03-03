@@ -323,8 +323,12 @@ export default {
       function verify () {
         question.isActive = true
         if (question.result === answer.value) {
+          const a = new Audio(require('../../../public/correcto.mp3'))
+          a.play()
           question.selected = true
         } else {
+          const b = new Audio(require('../../../public/error.mp3'))
+          b.play()
           question.selected = false
         }
         clearInterval(vm.timeCounter1)
@@ -360,6 +364,8 @@ export default {
       this.$q.loading.show({
         message: 'Terminando prueba...'
       })
+      const a = new Audio(require('../../../public/nivel.mp3'))
+      a.play()
       clearInterval(this.timeCounter)
       const cincuenta = (50 * this.test.point) / 100
       let num = 0
