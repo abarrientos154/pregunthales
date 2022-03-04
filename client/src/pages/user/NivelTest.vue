@@ -213,6 +213,8 @@ export default {
           cancel: true,
           persistent: true
         }).onOk(async () => {
+          const n = new Audio(require('../../../public/inicio.mp3'))
+          n.play()
           const answer = {
             title: this.test.title,
             total_questions: this.questions.length,
@@ -255,6 +257,8 @@ export default {
           cancel: true,
           persistent: true
         }).onOk(async () => {
+          const n = new Audio(require('../../../public/inicio.mp3'))
+          n.play()
           this.slide = 2
           this.valueTiempo()
         }).onCancel(() => {
@@ -279,6 +283,8 @@ export default {
           cancel: true,
           persistent: true
         }).onOk(async () => {
+          const n = new Audio(require('../../../public/inicio.mp3'))
+          n.play()
           const answer = {
             title: this.test.title,
             total_questions: this.questions.length,
